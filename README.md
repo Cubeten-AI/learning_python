@@ -106,7 +106,7 @@ Example:
 
 learning_python/
 
-├── john\_doe/
+├── john_doe/
 
 │   └── main.py
 
