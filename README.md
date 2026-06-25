@@ -1,20 +1,20 @@
-\# Learning Python
+# Learning Python
 
-\### This repository will be used to submit your assignments for learning python
-
-
-
-\### How to Submit
+### This repository will be used to submit your assignments for learning python
 
 
 
-\#### 1. Fork the Repository
-
-Click the \*\*"Fork"\*\* button at the top right of the repository page to create your own copy of the project.
+### How to Submit
 
 
 
-\#### 2. Clone Your Fork
+#### 1. Fork the Repository
+
+Click the **"Fork"** button at the top right of the repository page to create your own copy of the project.
+
+
+
+#### 2. Clone Your Fork
 
 Clone the forked repository to your local machine.
 
@@ -22,25 +22,25 @@ Clone the forked repository to your local machine.
 
 ```bash
 
-git clone https://github.com/your-username/learning\_python.git
+git clone https://github.com/your-username/learning_python.git
 
 ```
 
 
 
-\#### 3. Navigate to the Project Directory
+#### 3. Navigate to the Project Directory
 
 
 
 ```bash
 
-cd learning\_python
+cd learning_python
 
 ```
 
 
 
-\#### 4. Create a New Branch
+#### 4. Create a New Branch
 
 Create a branch using your name.
 
@@ -48,13 +48,13 @@ Create a branch using your name.
 
 ```bash
 
-git checkout -b your\_name
+git checkout -b your_name
 
 ```
 
 
 
-\#### 5. Create Your Personal Folder
+#### 5. Create Your Personal Folder
 
 Inside the project directory, create a folder using your name.
 
@@ -66,9 +66,9 @@ Example:
 
 ```text
 
-learning\_python/
+learning_python/
 
-├── john\_doe/
+├── john_doe/
 
 │   └── main.py
 
@@ -82,9 +82,9 @@ or
 
 ```text
 
-learning\_python/
+learning_python/
 
-├── john\_doe/
+├── john_doe/
 
 │   └── index.py
 
@@ -92,7 +92,7 @@ learning\_python/
 
 
 
-\#### 6. Add Your Python Program
+#### 6. Add Your Python Program
 
 Place your Python program inside your folder.
 
@@ -104,7 +104,7 @@ Example:
 
 ```text
 
-learning\_python/
+learning_python/
 
 ├── john\_doe/
 
@@ -126,7 +126,7 @@ print("Hello, World!")
 
 
 
-\#### 7. Stage Your Changes
+#### 7. Stage Your Changes
 
 
 
@@ -138,7 +138,7 @@ git add .
 
 
 
-\#### 8. Commit Your Changes
+#### 8. Commit Your Changes
 
 Use your name and program name in the commit message.
 
@@ -152,37 +152,37 @@ git commit -m "John Doe - Hello World Program"
 
 
 
-\#### 9. Push to Your Branch
+#### 9. Push to Your Branch
 
 
 
 ```bash
 
-git push origin your\_name
+git push origin your_name
 
 ```
 
 
 
-\#### 10. Create a Pull Request
+#### 10. Create a Pull Request
 
 Go to your forked repository on GitHub and create a Pull Request to the main repository.
 
 
 
-\#### 11. Add Upstream Remote
+#### 11. Add Upstream Remote
 
 
 
 ```bash
 
-git remote add upstream https://github.com/Cubeten-AI/learning\_python.git
+git remote add upstream https://github.com/Cubeten-AI/learning_python.git
 
 ```
 
 
 
-\#### 12. Verify the New Remote
+#### 12. Verify the New Remote
 
 
 
@@ -194,7 +194,7 @@ git remote -v
 
 
 
-\#### 13. Sync Your Fork with Upstream
+#### 13. Sync Your Fork with Upstream
 
 
 
@@ -208,13 +208,13 @@ git merge upstream/master
 
 
 
-\### Folder Structure Example
+### Folder Structure Example
 
 
 
 ```text
 
-learning\_python/
+learning_python/
 
 ├── alice/
 
@@ -234,19 +234,19 @@ learning\_python/
 
 
 
-\### Important Notes
+### Important Notes
 
 
 
-\- Create a folder using your own name.
+- Create a folder using your own name.
 
-\- Place your Python program inside your folder.
+- Place your Python program inside your folder.
 
-\- Do not modify or delete other contributors' folders or files.
+- Do not modify or delete other contributors' folders or files.
 
-\- Ensure your code runs without errors before submitting.
+- Ensure your code runs without errors before submitting.
 
-\- Use meaningful commit messages.
+- Use meaningful commit messages.
 
-\- Submit only `.py` files unless otherwise instructed.
+- Submit only `.py` files unless otherwise instructed.
 
