@@ -35,7 +35,7 @@ while True:
 
     user_choice = input("Do you want to perform another calculation? (yes/no): ")
 
-    if user_choice == "no":
+    if user_choice != "yes":
         print("Exiting the calculator program!")
         break
     
