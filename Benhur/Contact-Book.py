@@ -34,8 +34,12 @@ while True:
             if phonebook:
                 print("Contacts:")
                 for name, phone in phonebook.items():
+<<<<<<< HEAD
                     print(f"name is: {name} phone is: {phone}")
                     print("name is: ", name, "phone is: ", phone)
+=======
+                    print(f"{name}: {phone}")
+>>>>>>> 6f55e23e36119b5bd1a34c97b35f5e707b726d7e
             else:
                 print("No contacts found!")
 
@@ -48,7 +52,10 @@ while True:
         
         case _:
             print("Exiting the contact book program!")
+<<<<<<< HEAD
             break
+=======
+>>>>>>> 6f55e23e36119b5bd1a34c97b35f5e707b726d7e
             
     user_choice = input("Do you want to perform another operation? (yes/no): ")
     if user_choice != "yes":
