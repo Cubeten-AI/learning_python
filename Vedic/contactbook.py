@@ -30,15 +30,15 @@ def view():
     if len(contacts) == 0:
         print("No Contacts")
     else:
-        names = [name for name in contacts]      # List Comprehension
+        names = [name for name in contacts]     
 
-        for name in names:                       # Nested Loop
+        for name in names:                       
             for key, value in contacts[name].items():
                 print(name, "-", key, ":", value)
             print()
 
 
-def search(name):                               # Function Parameter
+def search(name):                              
     if name in contacts:
         print(contacts[name])
     else:
@@ -49,7 +49,7 @@ def update(name):
     if name in contacts:
         phone = input("Enter New Phone: ")
 
-        if phone.isdigit():                     # Nested Condition
+        if phone.isdigit():                     
             contacts[name]["Phone"] = phone
             print("Updated")
         else:
