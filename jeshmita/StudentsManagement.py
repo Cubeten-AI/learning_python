@@ -14,6 +14,17 @@ def calculate_grade(marks):
         return "D"
     else:
         return "F"
+    
+# Student Class
+class Student:
+    def __init__(self, sid, name, age, course, marks):
+        self.ID = sid
+        self.Name = name
+        self.Age = age
+        self.Course = course
+        self.Marks = marks
+        self.Grade = calculate_grade(marks)
+
 
 # Add Student
 def add_student():
