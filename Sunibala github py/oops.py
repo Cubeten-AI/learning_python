@@ -7,7 +7,7 @@ class Book:
     def show_info(self):
         print(f"This book {self.name} is written by {self.author} under the subject of {self.subject}")
 
-    def edit_name(self, new_name)
+    def edit_name(self, new_name):
         print(f"previous name was {self.name}")
         self.name = new_name
         print(f"new name is {self.name}")
