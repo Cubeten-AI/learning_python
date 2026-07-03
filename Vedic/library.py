@@ -34,11 +34,15 @@ C_plus_plus = Book("c plus plus", "CS", "tom")
 # C_plus_plus.show_info()
 
 
+
 def add_book_to_library(book_name):
-    library_books.append(book_name)
+    library_books.append(book_name)   
+    
+    with open('file.txt', 'w') as file:
+        for item in library_books:
+            print(file.write(item.name, item.author, item.subject))
     print("the book was added")
-
-
+        
 add_book_to_library(C_plus_plus)
 
 
