@@ -93,7 +93,7 @@ def create_file():
         print(f"{FILENAME} already exists")
 
 def menu():
-    load_books()  # load existing books when program starts
+    load_books()  
     
     while True:
         print("\n========== Library Management =========")
