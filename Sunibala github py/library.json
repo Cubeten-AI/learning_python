@@ -1,0 +1,17 @@
+[
+    {
+        "name": "c plus plus",
+        "subject": "CS",
+        "author": "tom"
+    },
+    {
+        "name": "OOP using JAVA",
+        "subject": "CS",
+        "author": "John"
+    },
+    {
+        "name": "nena",
+        "subject": "science",
+        "author": "wb"
+    }
+]
