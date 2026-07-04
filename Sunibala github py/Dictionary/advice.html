@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advice App</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: 'Segoe UI', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .app {
+            background: #fff;
+            width: 100%;
+            max-width: 500px;
+            padding: 3rem 2.5rem;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            text-align: center;
+        }
+
+        h1 {
+            color: #667eea;
+            margin-bottom: 0.5rem;
+            font-size: 2rem;
+        }
+
+        .subtitle {
+            color: #666;
+            margin-bottom: 2rem;
+        }
+
+        .advice-card {
+            background: #f8f9ff;
+            padding: 2.5rem 2rem;
+            border-radius: 15px;
+            margin: 2rem 0;
+            min-height: 150px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid #667eea;
+            position: relative;
+        }
+
+        #advice {
+            font-size: 1.4rem;
+            line-height: 1.7;
+            color: #333;
+            font-weight: 500;
+        }
+
+        #advice::before {
+            content: '"';
+            font-size: 3rem;
+            color: #667eea;
+            position: absolute;
+            top: 10px;
+            left: 15px;
+            opacity: 0.3;
+        }
+
+        #advice::after {
+            content: '"';
+            font-size: 3rem;
+            color: #667eea;
+            position: absolute;
+            bottom: -10px;
+            right: 15px;
+            opacity: 0.3;
+        }
+
+        #getBtn {
+            padding: 15px 45px;
+            background: #667eea;
+            color: #fff;
+            border: none;
+            border-radius: 50px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 1.1rem;
+            transition: all 0.3s;
+        }
+
+        #getBtn:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        #getBtn:active {
+            transform: translateY(0);
+        }
+
+        #getBtn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .loader {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            width: 45px;
+            height: 45px;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .error {
+            color: #e74c3c;
+            margin-top: 1rem;
+            font-weight: 500;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .advice-id {
+            color: #999;
+            font-size: 0.9rem;
+            margin-top: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="app">
+        <h1>Daily Advice</h1>
+        <p class="subtitle">Get random life advice anytime</p>
+        
+        <div class="advice-card">
+            <div id="loader" class="loader hidden"></div>
+            <p id="advice">Click below to get your first advice!</p>
+        </div>
+
+        <p class="advice-id hidden" id="adviceId"></p>
+
+        <button id="getBtn">Get New Advice</button>
+        <p id="error" class="error hidden"></p>
+    </div>
+
+    <script>
+        const adviceText = document.getElementById("advice");
+        const getBtn = document.getElementById("getBtn");
+        const loader = document.getElementById("loader");
+        const errorMsg = document.getElementById("error");
+        const adviceId = document.getElementById("adviceId");
+
+        async function getAdvice() {
+            // Reset UI
+            errorMsg.classList.add("hidden");
+            adviceText.classList.add("hidden");
+            adviceId.classList.add("hidden");
+            loader.classList.remove("hidden");
+            getBtn.disabled = true;
+            getBtn.innerText = "Loading...";
+
+            try {
+                // Using Adviceslip API - no key needed
+                const res = await fetch("https://api.adviceslip.com/advice", {
+                    cache: "no-cache" // Prevents getting same advice
+                });
+
+                if (!res.ok) throw new Error("Failed to fetch advice");
+                
+                const data = await res.json();
+                
+                displayAdvice(data.slip.advice, data.slip.id);
+                
+            } catch (err) {
+                showError("Couldn't get advice. Try again!");
+            } finally {
+                loader.classList.add("hidden");
+                getBtn.disabled = false;
+                getBtn.innerText = "Get New Advice";
+            }
+        }
+
+        function displayAdvice(advice, id) {
+            adviceText.innerText = advice;
+            adviceText.classList.remove("hidden");
+            adviceText.classList.add("fade-in");
+            
+            adviceId.innerText = `Advice #${id}`;
+            adviceId.classList.remove("hidden");
+            
+            setTimeout(() => {
+                adviceText.classList.remove("fade-in");
+            }, 500);
+        }
+
+        function showError(message) {
+            errorMsg.innerText = message;
+            errorMsg.classList.remove("hidden");
+            adviceText.innerText = "Oops! Something went wrong.";
+            adviceText.classList.remove("hidden");
+        }
+
+        getBtn.addEventListener("click", getAdvice);
+        
+        // Load first advice automatically
+        window.addEventListener("load", getAdvice);
+    </script>
+</body>
+</html>
