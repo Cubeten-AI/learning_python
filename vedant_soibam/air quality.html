@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Universal Air Quality Checker</title>
+    <style>
+        :root {
+            --bg-color: #f4f7f6;
+            --card-bg: #ffffff;
+            --text-main: #2d3748;
+        }
+
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            background: var(--card-bg);
+            padding: 2.5rem;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+        }
+
+        h1 {
+            margin: 0 0 1.5rem 0;
+            font-size: 1.6rem;
+            color: #1a202c;
+        }
+
+        .search-container {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 2rem;
+        }
+
+        input {
+            flex: 1;
+            padding: 14px 16px;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            font-size: 1rem;
+            outline: none;
+            transition: all 0.2s;
+        }
+
+        input:focus {
+            border-color: #4299e1;
+        }
+
+        button {
+            padding: 14px 24px;
+            background-color: #4299e1;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        button:hover {
+            background-color: #3182ce;
+        }
+
+        button:disabled {
+            background-color: #cbd5e0;
+            cursor: not-allowed;
+        }
+
+        .result-card {
+            display: none;
+            padding: 2rem 1.5rem;
+            border-radius: 16px;
+            margin-top: 1rem;
+            color: white;
+            animation: fadeIn 0.4s ease-out forwards;
+        }
+
+        .city-label {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .aqi-number {
+            font-size: 4.5rem;
+            font-weight: 800;
+            margin: 0;
+            line-height: 1.1;
+        }
+
+        .aqi-status {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-top: 10px;
+        }
+
+        .pollutants {
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.3);
+            display: flex;
+            justify-content: space-around;
+            font-size: 0.9rem;
+        }
+
+        .pollutant-item span {
+            display: block;
+            font-weight: 700;
+            font-size: 1.1rem;
+            margin-top: 4px;
+        }
+
+        .error-msg {
+            color: #e53e3e;
+            background: #fff5f5;
+            padding: 12px;
+            border-radius: 8px;
+            display: none;
+            font-weight: 500;
+            font-size: 0.95rem;
+            margin-bottom: 1rem;
+        }
+        
+        .data-source {
+            margin-top: 1.5rem;
+            font-size: 0.75rem;
+            opacity: 0.8;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Global Air Quality</h1>
+        
+        <div class="search-container">
+            <input type="text" id="cityInput" placeholder="Enter city (e.g., Imphal)">
+            <button id="searchBtn" onclick="fetchAQI()">Search</button>
+        </div>
+
+        <div id="errorBox" class="error-msg"></div>
+
+        <div id="resultCard" class="result-card">
+            <div id="cityName" class="city-label"></div>
+            <div class="aqi-number" id="aqiValue">--</div>
+            <div class="aqi-status" id="aqiStatus">--</div>
+            
+            <div class="pollutants">
+                <div class="pollutant-item">PM2.5<span id="pm25">--</span></div>
+                <div class="pollutant-item">PM10<span id="pm10">--</span></div>
+            </div>
+            
+            <div class="data-source">Data via Copernicus Satellite</div>
+        </div>
+    </div>
+
+    <script>
+        async function fetchAQI() {
+            const city = document.getElementById('cityInput').value.trim();
+            const btn = document.getElementById('searchBtn');
+            const resultCard = document.getElementById('resultCard');
+            const errorBox = document.getElementById('errorBox');
+
+            if (!city) {
+                showError("Please enter a city name.");
+                return;
+            }
+
+            // Reset UI for loading state
+            btn.disabled = true;
+            btn.textContent = '...';
+            errorBox.style.display = 'none';
+            resultCard.style.display = 'none';
+
+            try {
+                // STEP 1: Turn City Name into Coordinates using Free Geocoding API
+                const geoUrl = `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(city)}&count=1&language=en&format=json`;
+                const geoResponse = await fetch(geoUrl);
+                const geoData = await geoResponse.json();
+
+                if (!geoData.results || geoData.results.length === 0) {
+                    throw new Error(`Could not find the location "${city}".`);
+                }
+
+                const location = geoData.results[0];
+                const lat = location.latitude;
+                const lon = location.longitude;
+                // Formats nicely as "Imphal, Manipur"
+                const fullName = `${location.name}, ${location.admin1 || location.country}`;
+
+                // STEP 2: Use Coordinates to get Air Quality using Free Air Quality API
+                const aqiUrl = `https://air-quality-api.open-meteo.com/v1/air-quality?latitude=${lat}&longitude=${lon}&current=us_aqi,pm10,pm2_5`;
+                const aqiResponse = await fetch(aqiUrl);
+                const aqiData = await aqiResponse.json();
+
+                updateUI(fullName, aqiData.current);
+                
+            } catch (error) {
+                showError(error.message);
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'Search';
+            }
+        }
+
+        function updateUI(cityName, data) {
+            const card = document.getElementById('resultCard');
+            const aqi = data.us_aqi;
+            
+            document.getElementById('cityName').textContent = cityName;
+            document.getElementById('aqiValue').textContent = aqi;
+            document.getElementById('pm25').textContent = data.pm2_5;
+            document.getElementById('pm10').textContent = data.pm10;
+
+            let bgColor, statusMsg, textColor = '#ffffff';
+
+            // US EPA Scale
+            if (aqi <= 50) {
+                statusMsg = 'Good'; bgColor = '#38a169'; 
+            } else if (aqi <= 100) {
+                statusMsg = 'Moderate'; bgColor = '#ecc94b'; textColor = '#2d3748';
+            } else if (aqi <= 150) {
+                statusMsg = 'Unhealthy (Sensitive)'; bgColor = '#ed8936'; 
+            } else if (aqi <= 200) {
+                statusMsg = 'Unhealthy'; bgColor = '#e53e3e'; 
+            } else if (aqi <= 300) {
+                statusMsg = 'Very Unhealthy'; bgColor = '#805ad5'; 
+            } else {
+                statusMsg = 'Hazardous'; bgColor = '#718096'; 
+            }
+
+            card.style.backgroundColor = bgColor;
+            card.style.color = textColor;
+            document.getElementById('aqiStatus').textContent = statusMsg;
+            
+            card.style.display = 'block';
+        }
+
+        function showError(msg) {
+            const errorBox = document.getElementById('errorBox');
+            errorBox.textContent = msg;
+            errorBox.style.display = 'block';
+        }
+
+        // Allow 'Enter' key to trigger search
+        document.getElementById('cityInput').addEventListener('keypress', e => {
+            if (e.key === 'Enter') fetchAQI();
+        });
+    </script>
+</body>
+</html>
