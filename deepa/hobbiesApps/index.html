@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hobby Finder</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Hobby Finder</h1>
+        <p class="subtitle">Discover new hobbies by category</p>
+        
+        <div class="search-box">
+            <select id="categorySelect">
+                <option value="">All Categories</option>
+                <option value="general">General</option>
+                <option value="sports_and_outdoors">Sports & Outdoors</option>
+                <option value="education">Education</option>
+                <option value="collection">Collection</option>
+                <option value="competition">Competition</option>
+                <option value="observation">Observation</option>
+            </select>
+            <button id="searchBtn">Find Hobbies</button>
+        </div>
+
+        <div class="loader" id="loader">Loading hobbies...</div>
+        <div class="error" id="error"></div>
+
+        <div class="result" id="result">
+            <div class="hobby-count" id="hobbyCount"></div>
+            <div class="hobbies-grid" id="hobbiesGrid"></div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
+
+
+
+
