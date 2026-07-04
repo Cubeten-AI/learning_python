@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Ben's Currency Converter Program</title>
+
+<style>
+body{
+margin:0;
+font-family:Arial, sans-serif;
+background:linear-gradient(135deg,#1f1c2c,#928dab);
+color:white;
+display:flex;
+justify-content:center;
+align-items:center;
+height:100vh;
+}
+
+.card{
+background:rgba(255,255,255,0.1);
+backdrop-filter:blur(12px);
+padding:30px;
+border-radius:18px;
+width:320px;
+text-align:center;
+box-shadow:0 10px 30px rgba(0,0,0,0.4);
+}
+
+h1{font-size:20px;margin-bottom:20px;}
+
+input, select{
+width:100%;
+padding:10px;
+margin:8px 0;
+border:none;
+border-radius:10px;
+outline:none;
+}
+
+button{
+width:100%;
+padding:10px;
+border:none;
+border-radius:10px;
+background:#00c6ff;
+color:white;
+font-weight:bold;
+cursor:pointer;
+margin-top:10px;
+}
+
+.result{
+margin-top:15px;
+font-size:18px;
+font-weight:bold;
+}
+</style>
+</head>
+
+<body>
+
+<div class="card">
+<h1>💱 Ben's Currency Converter Program</h1>
+
+<input type="number" id="amount" placeholder="Enter amount"/>
+
+<select id="from"></select>
+<select id="to"></select>
+
+<button onclick="convert()">Convert</button>
+
+<div class="result" id="result">Result will appear here</div>
+</div>
+
+<script>
+
+const API_KEY = "6PsDZpEBwxW9g9y3U1qzEoCEJ0w2ErE7UEhUzgnT";
+const API_URL = "https://api.api-ninjas.com/v1/convertcurrency";
+
+/* API SECTION - Replace API_URL + API_KEY according to your provider */
+
+const currencies = ["USD","EUR","INR","GBP","JPY","AUD","CAD"];
+
+const from = document.getElementById("from");
+const to = document.getElementById("to");
+
+currencies.forEach(c=>{
+  from.innerHTML += `<option value="${c}">${c}</option>`;
+  to.innerHTML += `<option value="${c}">${c}</option>`;
+});
+
+from.value = "USD";
+to.value = "INR";
+
+async function convert(){
+const amount = document.getElementById("amount").value;
+
+const res = await fetch(`${API_URL}?apikey=${API_KEY}&from=${from.value}&to=${to.value}&amount=${amount}`);
+const data = await res.json();
+
+document.getElementById("result").textContent =
+data.result ?? "Error";
+}
+
+</script>
+
+</body>
+</html>

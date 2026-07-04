@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dictionary App</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Segoe UI',sans-serif;
+}
+
+body{
+    height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    background:linear-gradient(135deg,#3b82f6,#9333ea);
+}
+
+.container{
+    width:420px;
+    padding:30px;
+    border-radius:20px;
+    background:rgba(255,255,255,.15);
+    backdrop-filter:blur(15px);
+    box-shadow:0 15px 35px rgba(0,0,0,.25);
+    color:white;
+}
+
+h1{
+    text-align:center;
+    margin-bottom:20px;
+}
+
+.search{
+    display:flex;
+    gap:10px;
+}
+
+input{
+    flex:1;
+    padding:12px;
+    border:none;
+    border-radius:10px;
+    outline:none;
+    font-size:16px;
+}
+
+button{
+    padding:12px 18px;
+    border:none;
+    border-radius:10px;
+    background:#111827;
+    color:white;
+    cursor:pointer;
+    transition:.3s;
+}
+
+button:hover{
+    background:#000;
+}
+
+#result{
+    margin-top:25px;
+}
+
+.word{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin-bottom:15px;
+}
+
+.word img{
+    width:45px;
+}
+
+.word h2{
+    font-size:28px;
+}
+
+.card{
+    background:rgba(255,255,255,.12);
+    padding:15px;
+    border-radius:12px;
+    margin-top:10px;
+}
+
+.card h3{
+    margin-bottom:8px;
+}
+
+.error{
+    color:#ffd6d6;
+    text-align:center;
+    font-weight:bold;
+}
+</style>
+
+</head>
+<body>
+
+<div class="container">
+
+<h1>📖 Dictionary</h1>
+
+<div class="search">
+<input type="text" id="word" placeholder="Enter a word">
+<button onclick="searchWord()">Search</button>
+</div>
+
+<div id="result"></div>
+
+</div>
+
+<script>
+
+const API_KEY = "6PsDZpEBwxW9g9y3U1qzEoCEJ0w2ErE7UEhUzgnT";
+
+/*
+Replace this with your API endpoint.
+
+Example:
+https://your-api.com/dictionary
+*/
+
+const API_URL = "https://api.api-ninjas.com/v1/dictionary";
+
+async function searchWord(){
+
+    const word = document.getElementById("word").value.trim();
+
+    if(word===""){
+        alert("Please enter a word.");
+        return;
+    }
+
+    try{
+
+        // Modify this request according to your API documentation
+        const response = await fetch(`${API_URL}?word=${word}&key=${API_KEY}`);
+
+        if(!response.ok){
+            throw new Error("Request failed");
+        }
+
+        const data = await response.json();
+
+        /*
+        ====================================
+        CHANGE THESE VALUES TO MATCH YOUR API
+        ====================================
+
+        Example expected response:
+
+        {
+          "word":"Apple",
+          "phonetic":"/ˈæpəl/",
+          "partOfSpeech":"noun",
+          "definition":"A round fruit.",
+          "example":"She ate an apple."
+        }
+
+        */
+
+        document.getElementById("result").innerHTML = `
+
+        <div class="word">
+            <img src="https://cdn-icons-png.flaticon.com/512/2232/2232688.png">
+            <h2>${data.word}</h2>
+        </div>
+
+        <div class="card">
+            <h3>🔊 Pronunciation</h3>
+            <p>${data.phonetic}</p>
+        </div>
+
+        <div class="card">
+            <h3>📚 Part of Speech</h3>
+            <p>${data.partOfSpeech}</p>
+        </div>
+
+        <div class="card">
+            <h3>📖 Definition</h3>
+            <p>${data.definition}</p>
+        </div>
+
+        <div class="card">
+            <h3>💬 Example</h3>
+            <p>${data.example}</p>
+        </div>
+
+        `;
+
+    }
+
+    catch(error){
+
+        document.getElementById("result").innerHTML =
+        `<p class="error">❌ Unable to fetch the definition.</p>`;
+
+    }
+
+}
+
+</script>
+
+</body>
+</html>
