@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SkyCast Weather App</title>
+    <style>
+        :root {
+            --bg-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --card-bg: rgba(255, 255, 255, 0.2);
+            --text-color: #ffffff;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: var(--bg-gradient);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: var(--text-color);
+            padding: 20px;
+        }
+
+        .weather-container {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            padding: 35px 30px;
+            border-radius: 20px;
+            width: 100%;
+            max-width: 400px;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+            text-align: center;
+        }
+
+        /* Added UI App Title Styling */
+        .app-title {
+            font-size: 24px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            margin-bottom: 25px;
+            opacity: 0.95;
+            color: #ffffff;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .search-box {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+
+        .search-box input {
+            flex: 1;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 25px;
+            outline: none;
+            font-size: 16px;
+            background: rgba(255, 255, 255, 0.9);
+            color: #333;
+        }
+
+        .search-box button {
+            background: #ff7675;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 25px;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .search-box button:hover {
+            background: #e84393;
+        }
+
+        .weather-info {
+            display: none;
+            animation: fadeIn 0.5s ease-in-out forwards;
+        }
+
+        .city {
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .temp {
+            font-size: 64px;
+            font-weight: 800;
+            margin: 10px 0;
+        }
+
+        .description {
+            font-size: 18px;
+            text-transform: capitalize;
+            margin-bottom: 25px;
+            opacity: 0.9;
+        }
+
+        .details {
+            display: flex;
+            justify-content: space-around;
+            background: rgba(0, 0, 0, 0.1);
+            padding: 15px;
+            border-radius: 15px;
+        }
+
+        .col {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .col span:first-child {
+            font-size: 14px;
+            opacity: 0.7;
+            margin-bottom: 5px;
+        }
+
+        .col span:last-child {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .error-message {
+            color: #ff8787;
+            margin-top: 15px;
+            display: none;
+            font-weight: 500;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="weather-container">
+        <!-- New Visible UI Header -->
+        <h1 class="app-title">Vedant weather app</h1>
+
+        <div class="search-box">
+            <input type="text" id="city-input" placeholder="Enter city name..." autocomplete="off">
+            <button id="search-btn">Search</button>
+        </div>
+
+        <div class="error-message" id="error-txt">Something went wrong. Try again later.</div>
+
+        <div class="weather-info" id="weather-display">
+            <div class="city" id="city-name">London</div>
+            <div class="temp" id="temperature">21°C</div>
+            <div class="description" id="weather-desc">Scattered Clouds</div>
+            
+            <div class="details">
+                <div class="col">
+                    <span>Humidity</span>
+                    <span id="humidity">60%</span>
+                </div>
+                <div class="col">
+                    <span>Wind Speed</span>
+                    <span id="wind-speed">12 km/h</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Paste your OpenWeatherMap API key here string inside quotes
+        const API_KEY = '465e65ad4ce6bab1f4556daffed4933b'; 
+        
+        const searchBtn = document.getElementById('search-btn');
+        const cityInput = document.getElementById('city-input');
+        const weatherDisplay = document.getElementById('weather-display');
+        const errorTxt = document.getElementById('error-txt');
+
+        const cityName = document.getElementById('city-name');
+        const temperature = document.getElementById('temperature');
+        const weatherDesc = document.getElementById('weather-desc');
+        const humidity = document.getElementById('humidity');
+        const windSpeed = document.getElementById('wind-speed');
+
+        async function checkWeather(city) {
+            if (API_KEY === 'YOUR_API_KEY') {
+                showDemoData(city);
+                return;
+            }
+
+            // Fixed API URL configuration: Explicitly requesting 'units=metric' for accurate Celsius data
+            const apiUrl = `https://api.openweathermap.org/data/2.5/weather?units=metric&q=${city}&appid=${API_KEY}`;
+            
+            try {
+                const response = await fetch(apiUrl);
+                if (response.status === 404) {
+                    showError("City not found. Please try again.");
+                    return;
+                }
+                
+                const data = await response.json();
+                
+                cityName.innerText = data.name;
+                temperature.innerText = Math.round(data.main.temp) + "°C";
+                weatherDesc.innerText = data.weather[0].description;
+                humidity.innerText = data.main.humidity + "%";
+                windSpeed.innerText = Math.round(data.wind.speed * 3.6) + " km/h"; 
+                
+                displayWeather();
+            } catch (error) {
+                showError("Something went wrong. Try again later.");
+            }
+        }
+
+        function showDemoData(city) {
+            cityName.innerText = city.charAt(0).toUpperCase() + city.slice(1);
+            temperature.innerText = Math.floor(Math.random() * (35 - 15) + 15) + "°C";
+            const conditions = ["Clear Sky", "Partly Cloudy", "Heavy Rain", "Thunderstorm", "Mist"];
+            weatherDesc.innerText = conditions[Math.floor(Math.random() * conditions.length)] + " (Demo)";
+            humidity.innerText = Math.floor(Math.random() * (90 - 40) + 40) + "%";
+            windSpeed.innerText = Math.floor(Math.random() * 25) + " km/h";
+            
+            displayWeather();
+        }
+
+        function displayWeather() {
+            weatherDisplay.style.display = "block";
+            errorTxt.style.display = "none";
+        }
+
+        function showError(message) {
+            weatherDisplay.style.display = "none";
+            errorTxt.style.display = "block";
+            if(message) errorTxt.innerText = message;
+        }
+
+        searchBtn.addEventListener('click', () => {
+            if(cityInput.value.trim() !== "") {
+                checkWeather(cityInput.value);
+            }
+        });
+
+        cityInput.addEventListener('keydown', (event) => {
+            if (event.key === 'Enter' && cityInput.value.trim() !== "") {
+                checkWeather(cityInput.value);
+            }
+        });
+    </script>
+</body>
+</html>
