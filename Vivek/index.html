@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dictionary App</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial,sans-serif;
+}
+body{
+    background:#4f46e5;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    height:100vh;
+}
+.container{
+    width:450px;
+    background:#fff;
+    padding:25px;
+    border-radius:12px;
+    box-shadow:0 5px 20px rgba(0,0,0,.2);
+}
+h1{
+    text-align:center;
+    margin-bottom:20px;
+}
+.search{
+    display:flex;
+    gap:10px;
+}
+input{
+    flex:1;
+    padding:10px;
+    font-size:16px;
+}
+button{
+    padding:10px 20px;
+    background:#4f46e5;
+    color:white;
+    border:none;
+    cursor:pointer;
+}
+button:hover{
+    background:#3730a3;
+}
+#result{
+    margin-top:20px;
+    line-height:1.8;
+}
+</style>
+
+</head>
+<body>
+
+<div class="container">
+
+<h1>📖 Dictionary</h1>
+
+<div class="search">
+<input type="text" id="word" placeholder="Enter a word">
+<button onclick="searchWord()">Search</button>
+</div>
+
+<div id="result"></div>
+
+</div>
+
+<script>
+
+// ===============================
+// PASTE YOUR API KEY HERE
+// ===============================
+
+const API_KEY = "WJg997SCdJpY4PLqZTplxz6Vq3NcLmXOGiNZ5to5";
+
+// Replace with your API endpoint
+const API_URL = "https://api.api-ninjas.com/v1/dictionary";
+
+// ===============================
+
+async function searchWord(){
+
+    const word=document.getElementById("word").value.trim();
+
+    if(word===""){
+        alert("Please enter a word.");
+        return;
+    }
+
+    const result=document.getElementById("result");
+    result.innerHTML="Searching...";
+
+    try{
+
+        const response=await fetch(`${API_URL}?word=${word}`,{
+            method:"GET",
+            headers:{
+                "X-Api-Key":API_KEY,
+                "Content-Type":"application/json"
+            }
+        });
+
+        const data=await response.json();
+
+        result.innerHTML=`
+            <h2>${word}</h2>
+            <p>${JSON.stringify(data,null,2)}</p>
+        `;
+
+    }catch(error){
+
+        result.innerHTML="<h3>Error fetching data.</h3>";
+
+    }
+
+}
+
+document.getElementById("word").addEventListener("keypress",function(e){
+    if(e.key==="Enter"){
+        searchWord();
+    }
+});
+
+</script>
+
+</body>
+</html>
