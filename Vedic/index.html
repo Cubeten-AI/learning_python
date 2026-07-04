@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title> Weather App</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Poppins',sans-serif;
+}
+
+body{
+    height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    background:linear-gradient(-45deg,#0f2027,#203a43,#2c5364,#4facfe);
+    background-size:400% 400%;
+    animation:bg 15s ease infinite;
+    overflow:hidden;
+}
+
+@keyframes bg{
+    0%{background-position:0% 50%;}
+    50%{background-position:100% 50%;}
+    100%{background-position:0% 50%;}
+}
+
+.container{
+    width:380px;
+    padding:30px;
+    border-radius:25px;
+    background:rgba(255,255,255,.12);
+    backdrop-filter:blur(25px);
+    border:1px solid rgba(255,255,255,.2);
+    box-shadow:0 20px 40px rgba(0,0,0,.25);
+    color:#fff;
+}
+
+.title{
+    text-align:center;
+    font-size:28px;
+    margin-bottom:25px;
+    font-weight:700;
+}
+
+.search{
+    display:flex;
+    gap:10px;
+}
+
+.search input{
+    flex:1;
+    padding:15px;
+    border:none;
+    outline:none;
+    border-radius:15px;
+    background:rgba(255,255,255,.18);
+    color:white;
+    font-size:16px;
+}
+
+.search input::placeholder{
+    color:#ddd;
+}
+
+.search button{
+    width:55px;
+    border:none;
+    border-radius:15px;
+    cursor:pointer;
+    font-size:22px;
+    background:white;
+    transition:.3s;
+}
+
+.search button:hover{
+    transform:scale(1.08);
+}
+
+.card{
+    display:none;
+    margin-top:25px;
+    text-align:center;
+    animation:fade .7s;
+}
+
+@keyframes fade{
+    from{
+        opacity:0;
+        transform:translateY(20px);
+    }
+    to{
+        opacity:1;
+        transform:translateY(0);
+    }
+}
+
+.card img{
+    width:130px;
+}
+
+.temp{
+    font-size:60px;
+    font-weight:700;
+}
+
+.city{
+    font-size:28px;
+    margin-top:5px;
+}
+
+.desc{
+    text-transform:capitalize;
+    opacity:.9;
+}
+
+.details{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:15px;
+    margin-top:25px;
+}
+
+.box{
+    background:rgba(255,255,255,.15);
+    padding:15px;
+    border-radius:15px;
+    transition:.3s;
+}
+
+.box:hover{
+    transform:translateY(-5px);
+    background:rgba(255,255,255,.22);
+}
+
+.box h4{
+    font-size:14px;
+    font-weight:400;
+    opacity:.8;
+}
+
+.box p{
+    font-size:20px;
+    font-weight:600;
+}
+
+.error{
+    text-align:center;
+    color:#ffd6d6;
+    margin-top:20px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<div class="title">☁️ Vedic Weather app</div>
+
+<div class="search">
+<input type="text" id="city" placeholder="Search city...">
+<button onclick="getWeather()">🔍</button>
+</div>
+
+<div id="error" class="error"></div>
+
+<div id="weather" class="card">
+
+<img id="icon">
+
+<div class="temp" id="temp"></div>
+
+<div class="city" id="cityName"></div>
+
+<div class="desc" id="description"></div>
+
+<div class="details">
+
+<div class="box">
+<h4>Humidity</h4>
+<p id="humidity"></p>
+</div>
+
+<div class="box">
+<h4>Wind</h4>
+<p id="wind"></p>
+</div>
+
+<div class="box">
+<h4>Feels Like</h4>
+<p id="feels"></p>
+</div>
+
+<div class="box">
+<h4>Pressure</h4>
+<p id="pressure"></p>
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<script>
+
+const API_KEY="10c30ddf565b92278408c319ce728574";
+
+async function getWeather(){
+
+const city=document.getElementById("city").value;
+
+if(city=="") return;
+
+const url=`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${API_KEY}&units=metric`;
+
+try{
+
+const res=await fetch(url);
+
+const data=await res.json();
+
+if(data.cod!=200){
+
+document.getElementById("weather").style.display="none";
+
+document.getElementById("error").innerHTML="City not found.";
+
+return;
+
+}
+
+document.getElementById("error").innerHTML="";
+
+document.getElementById("weather").style.display="block";
+
+document.getElementById("icon").src=
+`https://openweathermap.org/img/wn/${data.weather[0].icon}@4x.png`;
+
+document.getElementById("temp").innerHTML=Math.round(data.main.temp)+"°";
+
+document.getElementById("cityName").innerHTML=data.name+", "+data.sys.country;
+
+document.getElementById("description").innerHTML=data.weather[0].description;
+
+document.getElementById("humidity").innerHTML=data.main.humidity+"%";
+
+document.getElementById("wind").innerHTML=data.wind.speed+" m/s";
+
+document.getElementById("feels").innerHTML=Math.round(data.main.feels_like)+"°";
+
+document.getElementById("pressure").innerHTML=data.main.pressure+" hPa";
+
+}catch(e){
+
+document.getElementById("error").innerHTML="Something went wrong.";
+
+}
+
+}
+
+</script>
+
+</body>
+</html>
