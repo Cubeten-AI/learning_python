@@ -58,7 +58,7 @@ def search_a_book(book_name):
     with open("file.txt", "r") as file:
         for line in file:
             name, subject, author = line.strip().split(",")
-
+            
             if name.lower() == book_name.lower():
                 print("Book found:")
                 print("Book Name:", name)
@@ -66,6 +66,15 @@ def search_a_book(book_name):
                 print("Author:", author)
                 return        
     print("Book not found.")
+
+#Search by author
+def search_a_book_by_author(author_name):
+    book_authored_by_given_author = []
+
+    if book.author == author_name:
+        books_authored_by_given_author.append(book)
+
+    print(books_authored_by_given_author)
  
 
 # Display books (r)
