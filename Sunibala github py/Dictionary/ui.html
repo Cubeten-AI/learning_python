@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Student Management</title>
+
+<style>
+
+body{
+    margin:0;
+    font-family:Arial;
+    background:#eef2f7;
+}
+
+header{
+    background:#1e3a8a;
+    color:white;
+    text-align:center;
+    padding:20px;
+    font-size:28px;
+}
+
+.container{
+    width:90%;
+    max-width:900px;
+    margin:auto;
+    margin-top:30px;
+}
+
+.search-box{
+    display:flex;
+    gap:10px;
+    margin-bottom:20px;
+}
+
+input{
+    flex:1;
+    padding:12px;
+    font-size:16px;
+}
+
+button{
+    background:#2563eb;
+    color:white;
+    border:none;
+    padding:12px 25px;
+    cursor:pointer;
+    border-radius:5px;
+}
+
+button:hover{
+    background:#1d4ed8;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+    background:white;
+}
+
+th{
+    background:#2563eb;
+    color:white;
+}
+
+th,td{
+    padding:12px;
+    text-align:center;
+    border:1px solid #ddd;
+}
+
+.card{
+    background:white;
+    padding:20px;
+    margin-top:20px;
+    border-radius:10px;
+    display:none;
+}
+
+</style>
+
+</head>
+<body>
+
+<header>
+Student Information System
+</header>
+
+<div class="container">
+
+<div class="search-box">
+
+<input type="number" id="studentId" placeholder="Enter Student ID">
+
+<button onclick="searchStudent()">Search</button>
+
+<button onclick="loadStudents()">Refresh</button>
+
+</div>
+
+<table>
+
+<thead>
+
+<tr>
+
+<th>ID</th>
+
+<th>Name</th>
+
+<th>Semester</th>
+
+</tr>
+
+</thead>
+
+<tbody id="studentTable">
+
+</tbody>
+
+</table>
+
+<div class="card" id="result">
+
+<h2>Student Details</h2>
+
+<p id="details"></p>
+
+</div>
+
+</div>
+
+<script>
+
+const API="http://127.0.0.1:8000";
+
+loadStudents();
+
+async function loadStudents(){
+
+const res=await fetch(API+"/student");
+
+const data=await res.json();
+
+let rows="";
+
+for(let id in data.Student_list){
+
+rows+=`
+
+<tr>
+
+<td>${id}</td>
+
+<td>${data.Student_list[id].name}</td>
+
+<td>${data.Student_list[id].sem}</td>
+
+</tr>
+
+`;
+
+}
+
+document.getElementById("studentTable").innerHTML=rows;
+
+}
+
+async function searchStudent(){
+
+const id=document.getElementById("studentId").value;
+
+if(id==""){
+
+alert("Enter Student ID");
+
+return;
+
+}
+
+const res=await fetch(API+"/student/"+id);
+
+const data=await res.json();
+
+const card=document.getElementById("result");
+
+const details=document.getElementById("details");
+
+card.style.display="block";
+
+if(data.message){
+
+details.innerHTML="<b>"+data.message+"</b>";
+
+}
+
+else{
+
+details.innerHTML=`
+
+<b>Name :</b> ${data.name}<br><br>
+
+<b>Semester :</b> ${data.sem}
+
+`;
+
+}
+
+}
+
+</script>
+
+</body>
+
+</html>

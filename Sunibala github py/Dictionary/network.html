@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>API Dashboard</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial,Helvetica,sans-serif;
+}
+
+body{
+    background:linear-gradient(135deg,#4facfe,#00f2fe);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    height:100vh;
+}
+
+.container{
+    width:420px;
+    background:#fff;
+    border-radius:15px;
+    padding:30px;
+    box-shadow:0 10px 25px rgba(0,0,0,.25);
+}
+
+h1{
+    text-align:center;
+    color:#333;
+    margin-bottom:20px;
+}
+
+label{
+    font-weight:bold;
+}
+
+input{
+    width:100%;
+    padding:12px;
+    margin-top:8px;
+    margin-bottom:15px;
+    border:1px solid #ccc;
+    border-radius:8px;
+    font-size:15px;
+}
+
+button{
+    width:100%;
+    padding:12px;
+    background:#007BFF;
+    color:white;
+    border:none;
+    border-radius:8px;
+    cursor:pointer;
+    font-size:16px;
+    transition:.3s;
+}
+
+button:hover{
+    background:#0056b3;
+}
+
+.result{
+    margin-top:20px;
+    background:#f5f5f5;
+    padding:15px;
+    border-radius:8px;
+    min-height:120px;
+    overflow:auto;
+    white-space:pre-wrap;
+}
+
+.status{
+    margin-top:10px;
+    font-weight:bold;
+    text-align:center;
+}
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>API Dashboard</h1>
+
+<label>Server URL</label>
+
+<input
+id="url"
+value="http://192.168.0.108:8000"
+>
+
+<button onclick="getData()">
+Get Data
+</button>
+
+<div class="status" id="status"></div>
+
+<div class="result" id="result">
+Response will appear here...
+</div>
+
+</div>
+
+<script>
+
+async function getData(){
+
+const url=document.getElementById("url").value;
+const result=document.getElementById("result");
+const status=document.getElementById("status");
+
+status.innerHTML="Connecting...";
+result.innerHTML="Loading...";
+
+try{
+
+const response=await fetch(url);
+
+const text=await response.text();
+
+status.innerHTML="✅ Connected Successfully";
+
+try{
+
+const json=JSON.parse(text);
+
+result.innerHTML=
+JSON.stringify(json,null,4);
+
+}
+catch{
+
+result.innerHTML=text;
+
+}
+
+}
+catch(error){
+
+status.innerHTML="❌ Connection Failed";
+
+result.innerHTML=error.message;
+
+}
+
+}
+
+</script>
+
+</body>
+</html>
