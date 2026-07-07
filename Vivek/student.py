@@ -113,7 +113,7 @@ def add_student(id: int, name: str, age: int, course: str, sem: int, marks: floa
         "marks": marks
     }
 
-    save_to_file()  # 🔥 AUTO SAVE
+    save_to_file()  #  AUTO SAVE
 
     return {
         "message": "Student added successfully",
@@ -138,7 +138,7 @@ def update_student(id: int, name: str, age: int, course: str, sem: int, marks: f
         "marks": marks
     }
 
-    save_to_file()  # 🔥 AUTO SAVE
+    save_to_file()  #  AUTO SAVE
 
     return {
         "message": "Student updated successfully",
@@ -157,7 +157,7 @@ def delete_student(id: int):
 
     deleted = students.pop(id)
 
-    save_to_file()  # 🔥 AUTO SAVE
+    save_to_file()  #  AUTO SAVE
 
     return {
         "message": "Student deleted successfully",
