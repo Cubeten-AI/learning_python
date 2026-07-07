@@ -158,29 +158,46 @@ course:document.getElementById("course").value,
 marks:Number(document.getElementById("marks").value)
 }
 }
+async function loadStudents() {
+    try {
+        const res = await fetch(API + "/students");
 
-async function loadStudents(){
+        if (!res.ok) {
+            throw new Error(`HTTP Error: ${res.status}`);
+        }
 
-const res=await fetch(API+"/students");
-const data=await res.json();
+        const data = await res.json();
 
-let rows="";
+        let rows = "";
 
-data.forEach(s=>{
-rows+=`
-<tr>
-<td>${s.id}</td>
-<td>${s.name}</td>
-<td>${s.age}</td>
-<td>${s.course}</td>
-<td>${s.marks}</td>
-<td>${s.grade}</td>
-</tr>
-`;
-});
+        data.forEach(s => {
+            rows += `
+                <tr>
+                    <td>${s.id}</td>
+                    <td>${s.name}</td>
+                    <td>${s.age}</td>
+                    <td>${s.course}</td>
+                    <td>${s.marks}</td>
+                    <td>${s.grade}</td>
+                </tr>
+            `;
+        });
 
-document.getElementById("table").innerHTML=rows;
+        document.getElementById("table").innerHTML = rows;
 
+    } catch (error) {
+        console.error("Error loading students:", error);
+
+        document.getElementById("table").innerHTML = `
+            <tr>
+                <td colspan="6" style="color:red; text-align:center;">
+                    Failed to load student data.
+                </td>
+            </tr>
+        `;
+
+        alert("Unable to load students. Please check if the FastAPI server is running.");
+    }
 }
 
 async function addStudent(){
@@ -231,7 +248,7 @@ const res=await fetch(API+"/average");
 
 const data=await res.json();
 
-document.getElementById("result").innerHTML="Average Marks : "+data.average;
+document.getElementById("result").innerHTML="Average Marks : "+data.Average;
 
 }
 
