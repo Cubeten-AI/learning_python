@@ -1,0 +1,10 @@
+ID: 1, Name: Benhur, Age: 20, Course: B.Tech, Semester: 4, Marks: 82
+ID: 2, Name: Denson, Age: 21, Course: B.Tech, Semester: 6, Marks: 88
+ID: 3, Name: Vivek, Age: 21, Course: B.Tech, Semester: 6, Marks: 91
+ID: 4, Name: Vedic, Age: 20, Course: B.Tech, Semester: 6, Marks: 79
+ID: 5, Name: Vedant, Age: 22, Course: B.Tech, Semester: 6, Marks: 95
+ID: 6, Name: Deepa, Age: 21, Course: B.Tech, Semester: 6, Marks: 86
+ID: 7, Name: Sunibala, Age: 21, Course: B.Tech, Semester: 6, Marks: 90
+ID: 8, Name: Jesmita, Age: 20, Course: B.Tech, Semester: 6, Marks: 84
+ID: 10, Name: tom, Age: 23, Course: CS, Semester: 6, Marks: 87.0
+ID: 9, Name: tom, Age: 23, Course: CS, Semester: 6, Marks: 87.0
