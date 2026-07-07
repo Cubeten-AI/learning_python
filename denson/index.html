@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Response Viewer</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #f4f6f8;
+            margin: 0;
+            padding: 40px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: auto;
+            background: white;
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 8px 20px rgba(0,0,0,.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        button {
+            padding: 12px 20px;
+            border: none;
+            background: #007bff;
+            color: white;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background: #0056b3;
+        }
+
+        pre {
+            background: #1e1e1e;
+            color: #00ff99;
+            padding: 20px;
+            border-radius: 8px;
+            overflow: auto;
+            margin-top: 20px;
+            min-height: 300px;
+        }
+
+        .loading {
+            color: #555;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>API Response Viewer</h1>
+
+    <button onclick="loadData()">Load Response</button>
+
+    <div class="loading" id="status"></div>
+
+    <pre id="output">Click "Load Response"</pre>
+</div>
+
+<script>
+async function loadData() {
+
+    const output = document.getElementById("output");
+    const status = document.getElementById("status");
+
+    status.innerText = "Loading...";
+
+    try {
+
+        const response = await fetch("http://192.168.0.108:8000/");
+
+        const data = await response.json();
+
+        output.textContent = JSON.stringify(data, null, 4);
+
+        status.innerText = "Success";
+
+    } catch (err) {
+
+        output.textContent = err;
+
+        status.innerText = "Failed to connect";
+
+    }
+}
+</script>
+
+</body>
+</html>
