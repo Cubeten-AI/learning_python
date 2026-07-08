@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Portfolio Blog</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+<div class="container">
+
+    <h1>My Portfolio</h1>
+
+    <div class="card">
+        <h2>Yaikhom Jeshmita Devi</h2>
+        <p><b>Course:</b> B.Tech CSE</p>
+        <p>
+            I am interested in Python, FastAPI, HTML, CSS and Web Development.
+        </p>
+
+        <h3>Skills</h3>
+        <ul>
+            <li>Python</li>
+            <li>FastAPI</li>
+            <li>HTML</li>
+            <li>CSS</li>
+            <li>Git</li>
+        </ul>
+
+        <h3>Projects</h3>
+        <ul>
+            <li>Attendance Management System</li>
+            <li>Student Management API</li>
+            <li>Dictionary App</li>
+        </ul>
+
+        <h3>Contact</h3>
+        <p>Email: your@email.com</p>
+    </div>
+
+    <h1>Blog Section</h1>
+
+    {% if edit == None %}
+
+    <form action="/add" method="post">
+        <input type="text" name="title" placeholder="Blog Title" required>
+
+        <textarea name="content"
+                  placeholder="Write your blog..."
+                  required></textarea>
+
+        <button>Add Blog</button>
+    </form>
+
+    {% else %}
+
+    <form action="/update/{{edit}}" method="post">
+
+        <input
+        type="text"
+        name="title"
+        value="{{blogs[edit]['title']}}"
+        required>
+
+        <textarea
+        name="content"
+        required>{{blogs[edit]['content']}}</textarea>
+
+        <button>Update Blog</button>
+
+    </form>
+
+    {% endif %}
+
+    {% for blog in blogs %}
+
+    <div class="blog">
+
+        <h2>{{blog.title}}</h2>
+
+        <p>{{blog.content}}</p>
+
+        <a href="/edit/{{loop.index0}}">
+            <button class="edit">Edit</button>
+        </a>
+
+        <a href="/delete/{{loop.index0}}">
+            <button class="delete">Delete</button>
+        </a>
+
+    </div>
+
+    {% endfor %}
+
+</div>
+
+</body>
+</html>
