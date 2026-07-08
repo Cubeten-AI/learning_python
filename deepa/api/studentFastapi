@@ -1,0 +1,152 @@
+from fastapi import FastAPI, HTTPException
+from pydantic import BaseModel
+
+app = FastAPI(title="Student Management API")
+
+students = []
+
+
+# -----------------------------
+# Student Model
+# -----------------------------
+class Student(BaseModel):
+    student_id: str
+    name: str
+    course_name: str
+    marks: float
+
+
+# -----------------------------
+# Helper: Grade Calculation
+# -----------------------------
+def calculate_grade(marks: float):
+    if marks >= 90:
+        return "A+"
+    elif marks >= 75:
+        return "A"
+    elif marks >= 60:
+        return "B"
+    elif marks >= 40:
+        return "C"
+    else:
+        return "F"
+
+
+# -----------------------------
+# Home
+# -----------------------------
+@app.get("/")
+def home():
+    return {"message": "Student Management API is running"}
+
+
+# -----------------------------
+# Add Student
+# -----------------------------
+@app.post("/students")
+def add_student(student: Student):
+    for s in students:
+        if s["student_id"] == student.student_id:
+            raise HTTPException(status_code=400, detail="Student ID already exists")
+
+    new_student = student.dict()
+    new_student["grade"] = calculate_grade(student.marks)
+
+    students.append(new_student)
+
+    return {
+        "message": "Student added successfully",
+        "student": new_student
+    }
+
+
+# -----------------------------
+# Get All Students
+# -----------------------------
+@app.get("/students")
+def get_students():
+    return students
+
+
+# -----------------------------
+# Search Student
+# -----------------------------
+@app.get("/students/{student_id}")
+def get_student(student_id: str):
+    for s in students:
+        if s["student_id"] == student_id:
+            return s
+
+    raise HTTPException(status_code=404, detail="Student not found")
+
+
+# -----------------------------
+# Update Student
+# -----------------------------
+@app.put("/students/{student_id}")
+def update_student(student_id: str, student: Student):
+    for i, s in enumerate(students):
+        if s["student_id"] == student_id:
+
+            updated_student = student.dict()
+            updated_student["grade"] = calculate_grade(student.marks)
+
+            students[i] = updated_student
+
+            return {
+                "message": "Student updated successfully",
+                "student": updated_student
+            }
+
+    raise HTTPException(status_code=404, detail="Student not found")
+
+
+# -----------------------------
+# Delete Student
+# -----------------------------
+@app.delete("/students/{student_id}")
+def delete_student(student_id: str):
+    for s in students:
+        if s["student_id"] == student_id:
+            students.remove(s)
+            return {"message": "Student deleted successfully"}
+
+    raise HTTPException(status_code=404, detail="Student not found")
+
+
+# -----------------------------
+# Class Average
+# -----------------------------
+@app.get("/average")
+def calculate_average():
+    if not students:
+        return {"message": "No students available"}
+
+    avg = sum(s["marks"] for s in students) / len(students)
+    return {"average": round(avg, 2)}
+
+
+# -----------------------------
+# Topper
+# -----------------------------
+@app.get("/topper")
+def find_topper():
+    if not students:
+        return {"message": "No students available"}
+
+    topper = max(students, key=lambda x: x["marks"])
+    return topper
+
+
+# -----------------------------
+# Save to File
+# -----------------------------
+@app.post("/save")
+def save_to_file():
+    with open("students.txt", "w") as f:
+        for s in students:
+            f.write(
+                f"{s['student_id']},{s['name']},{s['course_name']},{s['marks']},{s['grade']}\n"
+            )
+
+    return {"message": "Data saved successfully"}
