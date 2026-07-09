@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog Portfolio</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: Arial, Helvetica, sans-serif; }
+        body { background: #f4f4f4; color: #333; }
+        header { background: linear-gradient(135deg,#0f172a,#2563eb); color: #fff; text-align: center; padding: 60px 20px; }
+        header h1 { font-size: 40px; }
+        header p { margin-top: 10px; font-size: 18px; }
+        .about { max-width: 1000px; margin: 40px auto; display: flex; gap: 30px; align-items: center; padding: 20px; flex-wrap: wrap; }
+        .about img { width: 180px; height: 180px; border-radius: 50%; object-fit: cover; border: 5px solid #2563eb; }
+        .about-content { flex: 1; }
+        .about h2 { margin-bottom: 15px; color: #2563eb; }
+        .blog-section { max-width: 1200px; margin: auto; padding: 20px; }
+        .blog-section h2 { text-align: center; margin-bottom: 30px; color: #2563eb; }
+        .blog-grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(300px,1fr)); gap: 20px; }
+        .blog-card { background: #fff; border-radius: 12px; padding: 20px; box-shadow: 0 8px 20px rgba(0,0,0,.08); transition: .3s; }
+        .blog-card:hover { transform: translateY(-8px); }
+        .blog-card h3 { color: #222; margin-bottom: 10px; text-transform: capitalize; }
+        .blog-card p { color: #555; line-height: 1.6; }
+        .blog-card button { margin-top: 20px; background: #2563eb; color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; }
+        .blog-card button:hover { background: #1d4ed8; }
+        .loading { text-align: center; font-size: 20px; padding: 40px; }
+        footer { margin-top: 50px; background: #0f172a; color: white; text-align: center; padding: 25px; }
+        @media(max-width:768px){ .about { text-align: center; justify-content: center; } }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>John Doe</h1>
+    <p>Frontend Developer • Blogger • UI Designer</p>
+</header>
+
+<section class="about">
+    <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=500" alt="Profile">
+    <div class="about-content">
+        <h2>About Me</h2>
+        <p>I'm a passionate frontend developer who enjoys building responsive websites and writing blogs about JavaScript, HTML, CSS, and modern web technologies.</p>
+    </div>
+</section>
+
+<section class="blog-section">
+    <h2>Latest Blogs</h2>
+    <div id="blogContainer" class="blog-grid">
+        <div class="loading">Loading blogs...</div>
+    </div>
+</section>
+
+<footer>
+    <p>© 2026 My Portfolio | Built with HTML, CSS & JavaScript</p>
+</footer>
+
+<script>
+    // Using relative URLs so it works automatically on http://127.0.0.1:8000
+    const API_URL = "/blogs"; 
+    const blogContainer = document.getElementById("blogContainer");
+
+    async function loadBlogs() {
+        try {
+            const response = await fetch(API_URL);
+            const blogs = await response.json();
+            blogContainer.innerHTML = "";
+
+            if(blogs.length === 0) {
+                blogContainer.innerHTML = "<h3>No blogs found. Add some using your API!</h3>";
+                return;
+            }
+
+            blogs.slice(0, 9).forEach(blog => {
+                const card = document.createElement("div");
+                card.className = "blog-card";
+                
+                // FIXED: Changed blog.body to blog.content to match backend
+                const textSnippet = blog.content ? blog.content.substring(0, 120) : "";
+                
+                card.innerHTML = `
+                    <h3>${blog.title}</h3>
+                    <p>${textSnippet}...</p>
+                    <button onclick="viewPost(${blog.id})">Read More</button>
+                `;
+                blogContainer.appendChild(card);
+            });
+        } catch (error) {
+            console.error(error);
+            blogContainer.innerHTML = "<h2>Failed to load blogs.</h2>";
+        }
+    }
+
+    function viewPost(id) {
+        window.open(`/blogs/${id}`, "_blank");
+    }
+
+    loadBlogs();
+</script>
+</body>
+</html>
