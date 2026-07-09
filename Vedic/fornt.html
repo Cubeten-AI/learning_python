@@ -3,98 +3,231 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Blog Portfolio</title>
+    <title>Premium Portfolio & API Blog</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: Arial, Helvetica, sans-serif; }
-        body { background: #f4f4f4; color: #333; }
-        header { background: linear-gradient(135deg,#0f172a,#2563eb); color: #fff; text-align: center; padding: 60px 20px; }
-        header h1 { font-size: 40px; }
-        header p { margin-top: 10px; font-size: 18px; }
-        .about { max-width: 1000px; margin: 40px auto; display: flex; gap: 30px; align-items: center; padding: 20px; flex-wrap: wrap; }
-        .about img { width: 180px; height: 180px; border-radius: 50%; object-fit: cover; border: 5px solid #2563eb; }
-        .about-content { flex: 1; }
-        .about h2 { margin-bottom: 15px; color: #2563eb; }
-        .blog-section { max-width: 1200px; margin: auto; padding: 20px; }
-        .blog-section h2 { text-align: center; margin-bottom: 30px; color: #2563eb; }
-        .blog-grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(300px,1fr)); gap: 20px; }
-        .blog-card { background: #fff; border-radius: 12px; padding: 20px; box-shadow: 0 8px 20px rgba(0,0,0,.08); transition: .3s; }
-        .blog-card:hover { transform: translateY(-8px); }
-        .blog-card h3 { color: #222; margin-bottom: 10px; text-transform: capitalize; }
-        .blog-card p { color: #555; line-height: 1.6; }
-        .blog-card button { margin-top: 20px; background: #2563eb; color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; }
-        .blog-card button:hover { background: #1d4ed8; }
-        .loading { text-align: center; font-size: 20px; padding: 40px; }
-        footer { margin-top: 50px; background: #0f172a; color: white; text-align: center; padding: 25px; }
-        @media(max-width:768px){ .about { text-align: center; justify-content: center; } }
+        :root {
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --primary: #3b82f6;
+            --primary-hover: #2563eb;
+            --danger: #ef4444;
+            --border: #334155;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        body { background-color: var(--bg-color); color: var(--text-main); line-height: 1.6; padding: 40px 20px; }
+        .container { max-width: 1100px; margin: 0 auto; }
+
+        .profile-card {
+            background: var(--card-bg); border: 1px solid var(--border); border-radius: 16px;
+            padding: 40px; display: flex; align-items: center; justify-content: space-between;
+            margin-bottom: 40px; box-shadow: 0 10px 30px -10px rgba(0,0,0,0.5);
+        }
+        .profile-info h1 {
+            font-size: 2.5rem; font-weight: 700; margin-bottom: 5px;
+            background: linear-gradient(to right, #38bdf8, #3b82f6);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+        .profile-info p { color: var(--text-muted); font-size: 1.1rem; }
+        
+        .avatar {
+            width: 120px; height: 120px; border-radius: 50%; object-fit: cover;
+            box-shadow: 0 0 20px rgba(59, 130, 246, 0.3); border: 4px solid var(--card-bg);
+            background: #38bdf8; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold;
+        }
+
+        .workspace { display: grid; grid-template-columns: 350px 1fr; gap: 30px; }
+        @media (max-width: 850px) {
+            .workspace { grid-template-columns: 1fr; }
+            .profile-card { flex-direction: column; text-align: center; gap: 20px; }
+        }
+
+        .editor-panel {
+            background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px;
+            padding: 25px; height: fit-content; position: sticky; top: 20px;
+        }
+        .editor-panel h3 { margin-bottom: 20px; font-size: 1.2rem; border-bottom: 1px solid var(--border); padding-bottom: 10px; }
+        
+        input[type="text"], textarea {
+            width: 100%; background: var(--bg-color); border: 1px solid var(--border);
+            color: var(--text-main); padding: 12px 15px; border-radius: 8px; margin-bottom: 15px; font-size: 0.95rem;
+        }
+        input[type="text"]:focus, textarea:focus { outline: none; border-color: var(--primary); }
+        textarea { resize: vertical; min-height: 100px; }
+
+        .btn {
+            width: 100%; padding: 12px; border: none; border-radius: 8px;
+            background: var(--primary); color: white; font-weight: 600; cursor: pointer;
+            transition: all 0.2s; display: flex; justify-content: center; align-items: center; gap: 8px;
+        }
+        .btn:hover { background: var(--primary-hover); transform: translateY(-2px); }
+        
+        .btn-danger { background: transparent; border: 1px solid var(--danger); color: var(--danger); width: auto; padding: 6px 12px; font-size: 0.85rem;}
+        .btn-danger:hover { background: var(--danger); color: white; }
+        
+        .btn-edit { background: transparent; border: 1px solid var(--border); color: var(--text-main); width: auto; padding: 6px 12px; font-size: 0.85rem;}
+        .btn-edit:hover { background: var(--border); }
+
+        .blogs-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
+        .blog-card {
+            background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px;
+            padding: 20px; display: flex; flex-direction: column; justify-content: space-between;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .blog-card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.2); border-color: #475569; }
+        .blog-card h4 { font-size: 1.2rem; margin-bottom: 10px; color: white; }
+        .blog-card p { color: var(--text-muted); font-size: 0.95rem; margin-bottom: 20px; white-space: pre-wrap; }
+        .card-actions { display: flex; gap: 10px; border-top: 1px solid var(--border); padding-top: 15px; margin-top: auto; }
     </style>
 </head>
 <body>
 
-<header>
-    <h1>John Doe</h1>
-    <p>Frontend Developer • Blogger • UI Designer</p>
-</header>
+    <div class="container">
+        <header class="profile-card">
+            <div class="profile-info">
+                <h1>Hi, I'm Developer</h1>
+                <p>Building high-performance client-server architectures.</p>
+                
+                <div style="margin-top: 15px; display: flex; gap: 10px; flex-wrap: wrap;">
+                    <input type="file" id="image-upload" accept="image/*" style="background: transparent; color: white; border: none;">
+                    <button class="btn btn-edit" onclick="uploadImage()">Upload New Photo</button>
+                </div>
+            </div>
+            
+            <img id="profile-img-display" src="http://127.0.0.1:8000/static/profile_image.jpg" alt="Profile" class="avatar" 
+                 onerror="this.onerror=null; this.style.display='none'; if(!document.getElementById('avatar-fallback')) { this.insertAdjacentHTML('afterend', '<div class=\'avatar\' id=\'avatar-fallback\'>No IMG</div>'); }">
+        </header>
 
-<section class="about">
-    <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=500" alt="Profile">
-    <div class="about-content">
-        <h2>About Me</h2>
-        <p>I'm a passionate frontend developer who enjoys building responsive websites and writing blogs about JavaScript, HTML, CSS, and modern web technologies.</p>
+        <div class="workspace">
+            <aside class="editor-panel">
+                <h3 id="panel-title">Publish New Story</h3>
+                <input type="hidden" id="edit-id">
+                <input type="text" id="blog-title" placeholder="Enter an engaging title...">
+                <textarea id="blog-desc" placeholder="Write your thoughts here..."></textarea>
+                <button class="btn" onclick="saveBlog()">Commit to Database</button>
+            </aside>
+
+            <main>
+                <div id="blog-list" class="blogs-grid"></div>
+            </main>
+        </div>
     </div>
-</section>
 
-<section class="blog-section">
-    <h2>Latest Blogs</h2>
-    <div id="blogContainer" class="blog-grid">
-        <div class="loading">Loading blogs...</div>
-    </div>
-</section>
+    <script>
+        const API_URL = "http://127.0.0.1:8000";
 
-<footer>
-    <p>© 2026 My Portfolio | Built with HTML, CSS & JavaScript</p>
-</footer>
+        // Fetch Blogs
+        async function fetchBlogs() {
+            try {
+                const response = await fetch(`${API_URL}/blogs`);
+                const blogs = await response.json();
+                const container = document.getElementById('blog-list');
+                container.innerHTML = ''; 
 
-<script>
-    // Using relative URLs so it works automatically on http://127.0.0.1:8000
-    const API_URL = "/blogs"; 
-    const blogContainer = document.getElementById("blogContainer");
+                if(blogs.length === 0) {
+                    container.innerHTML = `<p style="color: var(--text-muted)">No blogs published yet.</p>`;
+                    return;
+                }
 
-    async function loadBlogs() {
-        try {
-            const response = await fetch(API_URL);
-            const blogs = await response.json();
-            blogContainer.innerHTML = "";
+                blogs.forEach(blog => {
+                    const div = document.createElement('div');
+                    div.className = 'blog-card';
+                    div.innerHTML = `
+                        <div>
+                            <h4>${escapeHtml(blog.title)}</h4>
+                            <p>${escapeHtml(blog.description)}</p>
+                        </div>
+                        <div class="card-actions">
+                            <button class="btn btn-edit" onclick="prepareEdit(${blog.id}, '${escapeHtml(blog.title).replace(/'/g, "\\'")}', '${escapeHtml(blog.description).replace(/\n/g, '\\n').replace(/'/g, "\\'")}')">Edit</button>
+                            <button class="btn btn-danger" onclick="deleteBlog(${blog.id})">Delete</button>
+                        </div>
+                    `;
+                    container.appendChild(div);
+                });
+            } catch (error) {
+                console.error("Make sure FastAPI is running!", error);
+            }
+        }
 
-            if(blogs.length === 0) {
-                blogContainer.innerHTML = "<h3>No blogs found. Add some using your API!</h3>";
-                return;
+        // Save Blog
+        async function saveBlog() {
+            const id = document.getElementById('edit-id').value;
+            const title = document.getElementById('blog-title').value.trim();
+            const description = document.getElementById('blog-desc').value.trim();
+
+            if (!title || !description) return alert("Please fill in both fields!");
+
+            if (id) {
+                await fetch(`${API_URL}/edit_blog/${id}`, {
+                    method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ title, description })
+                });
+                document.getElementById('panel-title').innerText = "Publish New Story";
+            } else {
+                await fetch(`${API_URL}/add_blog`, {
+                    method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ title, description })
+                });
             }
 
-            blogs.slice(0, 9).forEach(blog => {
-                const card = document.createElement("div");
-                card.className = "blog-card";
-                
-                // FIXED: Changed blog.body to blog.content to match backend
-                const textSnippet = blog.content ? blog.content.substring(0, 120) : "";
-                
-                card.innerHTML = `
-                    <h3>${blog.title}</h3>
-                    <p>${textSnippet}...</p>
-                    <button onclick="viewPost(${blog.id})">Read More</button>
-                `;
-                blogContainer.appendChild(card);
-            });
-        } catch (error) {
-            console.error(error);
-            blogContainer.innerHTML = "<h2>Failed to load blogs.</h2>";
+            document.getElementById('edit-id').value = '';
+            document.getElementById('blog-title').value = '';
+            document.getElementById('blog-desc').value = '';
+            fetchBlogs();
         }
-    }
 
-    function viewPost(id) {
-        window.open(`/blogs/${id}`, "_blank");
-    }
+        // Prepare Edit Form
+        function prepareEdit(id, title, desc) {
+            document.getElementById('panel-title').innerText = "Edit Existing Story";
+            document.getElementById('edit-id').value = id;
+            document.getElementById('blog-title').value = title;
+            document.getElementById('blog-desc').value = desc;
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
 
-    loadBlogs();
-</script>
+        // Delete Blog
+        async function deleteBlog(id) {
+            if (confirm("Permanently delete this post?")) {
+                await fetch(`${API_URL}/delete_blog/${id}`, { method: 'DELETE' });
+                fetchBlogs();
+            }
+        }
+
+        // Upload Profile Image
+        async function uploadImage() {
+            const fileInput = document.getElementById('image-upload');
+            const file = fileInput.files[0];
+            
+            if (!file) return alert("Please select a file first.");
+
+            const formData = new FormData();
+            formData.append("file", file);
+
+            try {
+                const response = await fetch(`${API_URL}/upload_profile`, { method: 'POST', body: formData });
+                const data = await response.json();
+                
+                if (response.ok) {
+                    const fallback = document.getElementById('avatar-fallback');
+                    if (fallback) fallback.remove();
+                    
+                    document.getElementById('profile-img-display').src = data.url + "?t=" + new Date().getTime();
+                    document.getElementById('profile-img-display').style.display = 'block';
+                    alert("Upload successful!");
+                }
+            } catch (error) {
+                console.error("Error uploading:", error);
+            }
+        }
+
+        // Sanitize Input
+        function escapeHtml(text) {
+            const map = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' };
+            return text.replace(/[&<>"']/g, function(m) { return map[m]; });
+        }
+
+        fetchBlogs();
+    </script>
 </body>
 </html>
