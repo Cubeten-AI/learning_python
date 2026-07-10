@@ -1,0 +1,45 @@
+Name: Denson
+
+Role:
+Python & FastAPI Developer
+
+Education:
+B.Tech Student
+
+Location:
+Manipur, India
+
+About:
+I enjoy Python, FastAPI, Linux, Artificial Intelligence, Cybersecurity and Web Development.
+
+Skills:
+Python
+FastAPI
+HTML
+CSS
+JavaScript
+Git
+GitHub
+Linux
+
+Projects:
+Student Management System
+Todo API
+Dictionary App
+Weather App
+AI Portfolio Website
+
+Hobbies:
+Programming
+Cybersecurity
+Learning AI
+Reading Technology Blogs
+
+Goal:
+Become an AI Engineer.
+
+Email:
+your@email.com
+
+GitHub:
+https://github.com/yourusername
