@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Assistant - H.U.D.</title>
+    <!-- Cinematic Fonts (Used by J.A.R.V.I.S./F.R.I.D.A.Y.) -->
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <style>
+        /* --- RESET & HOLOGRAPHIC ENVIRONMENT --- */
+        * { 
+            box-sizing: border-box; 
+            margin: 0; 
+            padding: 0; 
+            font-family: 'Share Tech Mono', monospace; 
+            -webkit-font-smoothing: antialiased;
+        }
+        
+        body { 
+            background: #020409;
+            color: #b0fbff; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            height: 100vh; 
+            padding: 10px;
+            overflow: hidden;
+            letter-spacing: 0.05em;
+        }
+
+        /* --- BLUR BACKGROUND ORBS (As seen in Screenshot (11).jpg, but integrated) --- */
+        body::before, body::after {
+            content: '';
+            position: absolute;
+            width: 600px;
+            height: 600px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(56, 189, 248, 0.08) 0%, transparent 70%);
+            z-index: 0;
+            pointer-events: none;
+        }
+        body::before { top: -20%; left: -20%; }
+        body::after { bottom: -20%; right: -20%; background: radial-gradient(circle, rgba(99, 102, 241, 0.08) 0%, transparent 70%); }
+        
+        /* --- CORE H.U.D. CHAT INTERFACE --- */
+        .chat-container {
+            width: 100%; 
+            max-width: 900px; 
+            height: 85vh;
+            background: rgba(8, 14, 25, 0.6);
+            backdrop-filter: blur(25px) saturate(140%);
+            -webkit-backdrop-filter: blur(25px) saturate(140%);
+            border-radius: 30px; 
+            border-image: linear-gradient(135deg, rgba(56, 189, 248, 0.3) 0%, rgba(99, 102, 241, 0.3) 100%) 1;
+            display: flex; 
+            flex-direction: column;
+            box-shadow: 0 40px 100px -20px rgba(0, 0, 0, 0.8),
+                        inset 0 1px 0px rgba(255, 255, 255, 0.08);
+            overflow: hidden;
+            z-index: 1;
+            position: relative;
+        }
+
+        /* --- GLOWING HEADER SECTIONS --- */
+        .chat-header {
+            padding: 25px 35px; 
+            background: rgba(5, 10, 20, 0.5);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center;
+        }
+
+        .header-title { 
+            display: flex; 
+            align-items: center; 
+            gap: 15px; 
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 700; 
+            font-size: 1.25rem; 
+            letter-spacing: 0.1em;
+            text-shadow: 0 0 15px rgba(176, 251, 255, 0.6);
+            background: linear-gradient(to right, #ffffff, #b0fbff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .header-icon {
+            width: 44px; 
+            height: 44px; 
+            border-radius: 14px;
+            background: linear-gradient(135deg, #02e1ff 0%, #3b82f6 100%);
+            display: flex; 
+            align-items: center; 
+            justify-content: center;
+            box-shadow: 0 0 25px rgba(56, 189, 248, 0.5);
+            color: #020409;
+        }
+
+        .clear-btn {
+            font-family: 'Orbitron', sans-serif;
+            background: rgba(239, 68, 68, 0.1); 
+            border: 1px solid rgba(239, 68, 68, 0.4);
+            color: #ff9f9f; 
+            padding: 10px 20px; 
+            border-radius: 12px; 
+            font-size: 0.85rem;
+            font-weight: 700;
+            cursor: pointer; 
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            letter-spacing: 0.1em;
+        }
+        .clear-btn:hover { 
+            background: #ef4444; 
+            color: #020409; 
+            border-color: #ef4444;
+            box-shadow: 0 0 20px rgba(239, 68, 68, 0.5);
+            transform: scale(1.05);
+        }
+
+        /* --- SCROLLABLE CHAT ENGINE --- */
+        .chat-history {
+            flex-grow: 1; 
+            padding: 35px; 
+            overflow-y: auto;
+            display: flex; 
+            flex-direction: column; 
+            gap: 28px;
+            scroll-behavior: smooth;
+        }
+
+        .chat-history::-webkit-scrollbar { width: 6px; }
+        .chat-history::-webkit-scrollbar-track { background: transparent; }
+        .chat-history::-webkit-scrollbar-thumb { background: rgba(56, 189, 248, 0.3); border-radius: 10px; }
+        .chat-history::-webkit-scrollbar-thumb:hover { background: rgba(56, 189, 248, 0.5); }
+        
+        /* --- ADVANCED TIMING ANIMATIONS --- */
+        @keyframes messageEnter {
+            from { opacity: 0; transform: translateY(20px) scale(0.98); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        /* --- MESSAGE PANELS (As seen card-style in Screenshot (11).jpg, now panels) --- */
+        .message {
+            max-width: 78%; 
+            padding: 18px 22px; 
+            line-height: 1.7;
+            font-size: 0.98rem; 
+            letter-spacing: 0.05em;
+            animation: messageEnter 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            box-shadow: 0 8px 30px -5px rgba(0, 0, 0, 0.4);
+            transition: all 0.2s ease;
+        }
+
+        .user-msg {
+            background: linear-gradient(135deg, rgba(37, 99, 235, 0.9) 0%, rgba(29, 78, 216, 0.9) 100%); 
+            color: #ffffff;
+            align-self: flex-end; 
+            border-radius: 20px 20px 4px 20px;
+            box-shadow: 0 10px 30px -8px rgba(37, 99, 235, 0.5);
+            font-weight: 400;
+        }
+
+        .ai-msg {
+            background: rgba(30, 41, 59, 0.5); 
+            color: #b0fbff; 
+            align-self: flex-start;
+            border-radius: 20px 20px 20px 4px; 
+            border: 1px solid rgba(176, 251, 255, 0.1);
+            text-shadow: 0 0 5px rgba(176, 251, 255, 0.3);
+        }
+
+        /* --- PULSING H.U.D. LOADING STATE --- */
+        @keyframes pulseGlow {
+            0%, 100% { opacity: 0.4; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.05); color: #02e1ff; text-shadow: 0 0 15px #02e1ff;}
+        }
+
+        .loading {
+            color: rgba(148, 163, 184, 0.7); 
+            font-size: 0.9rem; 
+            font-weight: 500;
+            align-self: flex-start;
+            display: flex; 
+            align-items: center; 
+            gap: 12px; 
+            padding: 14px 22px;
+            background: rgba(30, 41, 59, 0.3);
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            animation: messageEnter 0.3s ease-out forwards;
+        }
+
+        .loading svg {
+            animation: spin 2s linear infinite, pulseGlow 1.5s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            100% { transform: rotate(360deg); }
+        }
+
+        /* --- FOOTER INPUT CONTROL --- */
+        .chat-input-area {
+            display: flex; 
+            padding: 25px 35px 35px 35px; 
+            background: rgba(5, 10, 20, 0.6);
+            border-top: 1px solid rgba(255, 255, 255, 0.08); 
+            gap: 18px; 
+            align-items: center;
+        }
+
+        input {
+            flex-grow: 1; 
+            padding: 18px 26px; 
+            border-radius: 18px; 
+            border: 1px solid rgba(71, 85, 105, 0.5);
+            background: rgba(15, 23, 42, 0.7); 
+            color: #ffffff; 
+            font-size: 1rem; 
+            outline: none; 
+            transition: all 0.3s ease;
+            box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.3);
+        }
+        input:focus { 
+            border-color: #02e1ff; 
+            background: rgba(15, 23, 42, 0.9);
+            box-shadow: 0 0 0 5px rgba(56, 189, 248, 0.2), inset 0 2px 5px rgba(0, 0, 0, 0.3); 
+        }
+        input::placeholder { color: rgba(100, 116, 139, 0.8); }
+
+        /* --- SEND BUTTON MICRO-INTERACTIONS --- */
+        .send-btn {
+            width: 56px; 
+            height: 56px; 
+            border-radius: 18px; 
+            border: none;
+            background: linear-gradient(135deg, #02e1ff 0%, #3b82f6 100%); 
+            color: #020409;
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1); 
+            box-shadow: 0 10px 25px -8px rgba(56, 189, 248, 0.6);
+        }
+        .send-btn:hover { 
+            transform: translateY(-3px) scale(1.05); 
+            box-shadow: 0 15px 30px -5px rgba(56, 189, 248, 0.7);
+            filter: brightness(1.1);
+        }
+        .send-btn:active { transform: translateY(1px) scale(0.98); }
+    </style>
+</head>
+<body>
+
+    <div class="chat-container">
+        <div class="chat-header">
+            <div class="header-title">
+                <div class="header-icon">
+                    <!-- High-tech HUD bot icon (Updated) -->
+                    <svg width="22" height="22" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm0 2c4.411 0 8 3.589 8 8a7.971 7.971 0 01-1.282 4.316A9.957 9.957 0 0012 14c-2.316 0-4.41.611-6.108 1.636A8.003 8.003 0 014 12c0-4.411 3.589-8 8-8zM7.061 17.697A11.966 11.966 0 0112 16a11.96 11.96 0 015.039 1.697 8.003 8.003 0 01-10.078 0zM12 13c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4z"></path></svg>
+                </div>
+                VEDIC AI (NVIDIA Powered)
+            </div>
+            <button class="clear-btn" onclick="clearMemory()">Reset Context</button>
+        </div>
+        
+        <div class="chat-history" id="chat-history"></div>
+
+        <div class="chat-input-area">
+            <input type="text" id="user-input" placeholder="Initiate data query..." onkeypress="handleKeyPress(event)" autocomplete="off">
+            <button class="send-btn" onclick="sendMessage()">
+                <!-- Classic Send Icon (Retained and Enhanced) -->
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+            </button>
+        </div>
+    </div>
+
+    <!-- SCRIPT BLOCKS REMAIN COMPLETELY ORIGINAL AND UNTOUCHED -->
+    <script>
+        const API_URL = "http://127.0.0.1:8000/chat";
+        
+        // 1. Initialize Memory from Browser
+        let chatMemory = JSON.parse(localStorage.getItem("my_ai_chat_memory")) || [];
+
+        // 2. Render Chat UI
+        function renderChat() {
+            const historyDiv = document.getElementById('chat-history');
+            historyDiv.innerHTML = ''; 
+
+            if (chatMemory.length === 0) {
+                historyDiv.innerHTML = `<div class="message ai-msg">Hello Vedic! I am running on the new NVIDIA api. How can I help you today?</div>`;
+            } else {
+                chatMemory.forEach(msg => {
+                    const msgClass = msg.role === 'User' ? 'user-msg' : 'ai-msg';
+                    const formattedText = escapeHtml(msg.text).replace(/\n/g, '<br>');
+                    historyDiv.innerHTML += `<div class="message ${msgClass}">${formattedText}</div>`;
+                });
+            }
+            scrollToBottom();
+        }
+
+        // 3. Send Message to Python
+        async function sendMessage() {
+            const inputField = document.getElementById('user-input');
+            const messageText = inputField.value.trim();
+            if (!messageText) return;
+
+            // Save user message
+            chatMemory.push({ role: 'User', text: messageText });
+            localStorage.setItem("my_ai_chat_memory", JSON.stringify(chatMemory));
+            renderChat();
+            
+            inputField.value = ''; 
+            
+            // Show Loading Animation
+            const historyDiv = document.getElementById('chat-history');
+            const loadingId = "loading-" + Date.now();
+            historyDiv.innerHTML += `
+                <div id="${loadingId}" class="loading">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v4m0 12v4M4.93 4.93l2.83 2.83m8.48 8.48l2.83 2.83M2 12h4m12 0h4M4.93 19.07l2.83-2.83m8.48-8.48l2.83-2.83"></path></svg>
+                    Processing Protocol...
+                </div>`;
+            scrollToBottom();
+
+            try {
+                // Fetch from FastAPI
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ 
+                        prompt: messageText,
+                        history: chatMemory.slice(0, -1) // Send history excluding the message we just sent
+                    })
+                });
+
+                const data = await response.json();
+                document.getElementById(loadingId).remove();
+
+                // Save AI response
+                chatMemory.push({ role: 'AI', text: data.reply });
+                localStorage.setItem("my_ai_chat_memory", JSON.stringify(chatMemory));
+                renderChat();
+                
+            } catch (error) {
+                document.getElementById(loadingId).remove();
+                historyDiv.innerHTML += `<div class="message ai-msg" style="color: #ef4444;">Error: Unable to connect to the backend server. Make sure Uvicorn is running!</div>`;
+            }
+        }
+
+        // 4. Utility Functions
+        function clearMemory() {
+            if(confirm("Are you sure you want to clear the chat history?")) {
+                localStorage.removeItem("my_ai_chat_memory");
+                chatMemory = [];
+                renderChat();
+            }
+        }
+
+        function handleKeyPress(event) {
+            if (event.key === "Enter") sendMessage();
+        }
+
+        function scrollToBottom() {
+            const history = document.getElementById('chat-history');
+            history.scrollTop = history.scrollHeight;
+        }
+
+        function escapeHtml(text) {
+            const map = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' };
+            return text.replace(/[&<>"']/g, function(m) { return map[m]; });
+        }
+
+        // Start the app!
+        renderChat();
+    </script>
+</body>
+</html>
