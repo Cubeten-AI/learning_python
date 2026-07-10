@@ -19,7 +19,7 @@ templates = Jinja2Templates(directory="templates")
 # ==========================
 
 client = genai.Client(
-    api_key="AQ.Ab8RN6Ic9it1QZWD-ZapOWpbQH5l6M7-aGigSt6b_EbDPPSvVg"
+    api_key=""
 )
 
 # ==========================
