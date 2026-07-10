@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Angom Sunibala | Portfolio</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+    * { margin: 0; padding: 0; box-sizing: border-box; scroll-behavior: smooth; }
+    body { font-family: 'Poppins', sans-serif; background: #f5f7fa; color: #333; }
+
+    nav { background: #222; color: #fff; padding: 15px 0; position: sticky; top: 0; z-index: 100; }
+    nav .container { max-width: 1100px; margin: auto; display: flex; justify-content: space-between; align-items: center; padding: 0 20px; }
+    nav h1 { color: #4a90e2; }
+    nav ul { list-style: none; display: flex; gap: 20px; }
+    nav a { color: #fff; text-decoration: none; font-weight: 500; }
+    nav a:hover { color: #4a90e2; }
+
+    .hero { background: linear-gradient(135deg, #4a90e2, #50e3c2); color: white; text-align: center; padding: 100px 20px; }
+    .hero h2 { font-size: 40px; margin-bottom: 10px; }
+
+    .container { max-width: 1100px; margin: auto; padding: 60px 20px; }
+    .section-title { text-align: center; font-size: 32px; margin-bottom: 40px; color: #4a90e2; }
+
+    .about { display: flex; gap: 30px; flex-wrap: wrap; align-items: center; }
+    .about img { width: 220px; border-radius: 15px; }
+    .tag { background: #4a90e2; color: white; padding: 5px 12px; border-radius: 20px; font-size: 14px; margin-right: 8px; }
+
+    .skills-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 20px; }
+    .skill-card { background: white; padding: 20px; border-radius: 12px; text-align: center; box-shadow: 0 3px 10px rgba(0,0,0,0.1); }
+
+    /* BLOG */
+    #blog { background: #fff; }
+    .blog-form { background: #f9f9f9; padding: 25px; border-radius: 12px; margin-bottom: 40px; box-shadow: 0 3px 10px rgba(0,0,0,0.08); }
+    .blog-form input, .blog-form textarea { width: 100%; padding: 12px; margin-bottom: 15px; border: 2px solid #ddd; border-radius: 8px; font-family: 'Poppins'; }
+    .btn { background: #4a90e2; color: white; border: none; padding: 12px 22px; border-radius: 8px; cursor: pointer; font-weight: 600; margin-right: 10px; }
+    .btn:hover { background: #357ABD; }
+    .btn-edit { background: #f39c12; } .btn-edit:hover { background: #d68910; }
+    .btn-delete { background: #e74c3c; } .btn-delete:hover { background: #c0392b; }
+
+    .blog-list { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px; }
+    .blog-card { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 3px 10px rgba(0,0,0,0.1); }
+    .blog-card h3 { color: #4a90e2; margin-bottom: 10px; }
+    .loader { text-align: center; color: #4a90e2; font-size: 18px; }
+
+    footer { background: #222; color: white; text-align: center; padding: 20px; }
+</style>
+</head>
+<body>
+
+<nav>
+    <div class="container">
+        <h1>Angom Sunibala</h1>
+        <ul>
+            <li><a href="#home">Home</a></li>
+            <li><a href="#about">About</a></li>
+            <li><a href="#skills">Skills</a></li>
+            <li><a href="#blog">Blog</a></li>
+        </ul>
+    </div>
+</nav>
+
+<section class="hero" id="home">
+    <h2>Hi, I'm Angom Sunibala</h2>
+    <p>BTech Student | AI Intern | Python | C | C++ Developer</p>
+</section>
+
+<section id="about">
+    <div class="container">
+        <h2 class="section-title">About Me</h2>
+        <div class="about">
+            <img src="https://picsum.photos/220" alt="Profile">
+            <div>
+                <span class="tag">BTech Student</span>
+                <span class="tag">AI Intern</span>
+                <p>I'm a BTech student passionate about coding, AI, and APIs. 
+                I know Python, C, and C++. Completed AI internship.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="skills" style="background:#fff;">
+    <div class="container">
+        <h2 class="section-title">My Skills</h2>
+        <div class="skills-grid">
+            <div class="skill-card"><h3>Python</h3></div>
+            <div class="skill-card"><h3>C / C++</h3></div>
+            <div class="skill-card"><h3>HTML & CSS</h3></div>
+            <div class="skill-card"><h3>JavaScript + API</h3></div>
+            <div class="skill-card"><h3>AI / ML</h3></div>
+        </div>
+    </div>
+</section>
+
+<!-- BLOG CRUD WITH API -->
+<section id="blog">
+    <div class="container">
+        <h2 class="section-title">My Blog - API CRUD</h2>
+
+        <!-- CREATE / UPDATE FORM -->
+        <div class="blog-form">
+            <h3 id="form-title">Create New Blog Post</h3>
+            <input type="hidden" id="blog-id">
+            <input type="text" id="blog-title" placeholder="Enter Blog Title" required>
+            <textarea id="blog-content" rows="5" placeholder="Write your blog here..." required></textarea>
+            <button class="btn" onclick="saveBlog()">Save Blog</button>
+            <button class="btn" style="background:gray;" onclick="clearForm()">Cancel</button>
+        </div>
+
+        <!-- READ BLOGS -->
+        <div id="loader" class="loader">Loading blogs...</div>
+        <div class="blog-list" id="blog-list"></div>
+    </div>
+</section>
+
+<footer>
+    <p>© 2026 Angom Sunibala. Using JSONPlaceholder API</p>
+</footer>
+
+<script>
+    const API_URL = "https://jsonplaceholder.typicode.com/posts";
+    let blogs = [];
+
+    // 1. READ - GET all blogs
+    async function fetchBlogs() {
+        document.getElementById('loader').style.display = "block";
+        try {
+            const res = await fetch(API_URL + "?_limit=6"); // get first 6 posts
+            blogs = await res.json();
+            displayBlogs();
+        } catch (err) {
+            alert("Error fetching blogs");
+        }
+        document.getElementById('loader').style.display = "none";
+    }
+
+    function displayBlogs() {
+        const blogList = document.getElementById("blog-list");
+        blogList.innerHTML = "";
+        blogs.forEach(blog => {
+            blogList.innerHTML += `
+                <div class="blog-card">
+                    <h3>${blog.title}</h3>
+                    <p>${blog.body}</p>
+                    <div style="margin-top:15px;">
+                        <button class="btn btn-edit" onclick="editBlog(${blog.id}, \`${blog.title}\`, \`${blog.body}\`)">Edit</button>
+                        <button class="btn btn-delete" onclick="deleteBlog(${blog.id})">Delete</button>
+                    </div>
+                </div>
+            `;
+        });
+    }
+
+    // 2. CREATE - POST & 3. UPDATE - PUT
+    async function saveBlog() {
+        const id = document.getElementById("blog-id").value;
+        const title = document.getElementById("blog-title").value;
+        const body = document.getElementById("blog-content").value;
+
+        if (title === "" || body === "") {
+            alert("Please fill all fields!");
+            return;
+        }
+
+        const blogData = { title, body, userId: 1 };
+
+        if (id) { // UPDATE
+            const res = await fetch(`${API_URL}/${id}`, {
+                method: 'PUT',
+                body: JSON.stringify(blogData),
+                headers: { 'Content-type': 'application/json; charset=UTF-8' },
+            });
+            if(res.ok) alert("Blog Updated Successfully!");
+        } else { // CREATE
+            const res = await fetch(API_URL, {
+                method: 'POST',
+                body: JSON.stringify(blogData),
+                headers: { 'Content-type': 'application/json; charset=UTF-8' },
+            });
+            if(res.ok) alert("Blog Created Successfully!");
+        }
+
+        clearForm();
+        fetchBlogs(); // refresh
+    }
+
+    // EDIT - fill form
+    function editBlog(id, title, body) {
+        document.getElementById("blog-id").value = id;
+        document.getElementById("blog-title").value = title;
+        document.getElementById("blog-content").value = body;
+        document.getElementById("form-title").innerText = "Update Blog Post";
+        window.scrollTo({ top: document.getElementById("blog").offsetTop, behavior: "smooth" });
+    }
+
+    // 4. DELETE
+    async function deleteBlog(id) {
+        if (confirm("Are you sure you want to delete this blog?")) {
+            const res = await fetch(`${API_URL}/${id}`, { method: 'DELETE' });
+            if(res.ok) alert("Blog Deleted!");
+            fetchBlogs(); // refresh
+        }
+    }
+
+    function clearForm() {
+        document.getElementById("blog-id").value = "";
+        document.getElementById("blog-title").value = "";
+        document.getElementById("blog-content").value = "";
+        document.getElementById("form-title").innerText = "Create New Blog Post";
+    }
+
+    // Load on start
+    fetchBlogs();
+</script>
+
+</body>
+</html>
