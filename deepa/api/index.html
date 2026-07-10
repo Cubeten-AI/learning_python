@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Student Management</title>
+
+<style>
+body{
+    font-family:Arial,Helvetica,sans-serif;
+    background:#f2f2f2;
+}
+
+.container{
+    width:700px;
+    margin:30px auto;
+    background:white;
+    padding:20px;
+    border-radius:8px;
+    box-shadow:0 0 10px gray;
+}
+
+h2{
+    text-align:center;
+}
+
+input{
+    width:100%;
+    padding:10px;
+    margin:8px 0;
+}
+
+button{
+    padding:10px 18px;
+    margin:5px;
+    background:#007bff;
+    color:white;
+    border:none;
+    cursor:pointer;
+}
+
+button:hover{
+    background:#0056b3;
+}
+
+table{
+    width:100%;
+    margin-top:20px;
+    border-collapse:collapse;
+}
+
+table,th,td{
+    border:1px solid #ccc;
+}
+
+th,td{
+    padding:10px;
+    text-align:center;
+}
+
+.result{
+    margin-top:15px;
+    font-weight:bold;
+}
+</style>
+
+</head>
+<body>
+
+<div class="container">
+
+<h2>Student Management System</h2>
+
+<input type="text" id="roll" placeholder="Roll Number">
+<input type="text" id="name" placeholder="Name">
+<input type="number" id="marks" placeholder="Marks">
+
+<button onclick="addStudent()">Add</button>
+<button onclick="loadStudents()">Show Students</button>
+<button onclick="findTopper()">Topper</button>
+<button onclick="average()">Average</button>
+<button onclick="save()">Save</button>
+
+<div class="result" id="result"></div>
+
+<table>
+<thead>
+<tr>
+<th>Roll</th>
+<th>Name</th>
+<th>Marks</th>
+<th>Action</th>
+</tr>
+</thead>
+
+<tbody id="studentsTable"></tbody>
+
+</table>
+
+</div>
+
+<script>
+
+async function loadStudents(){
+
+    let response=await fetch("/students");
+    let students=await response.json();
+
+    let table="";
+
+    students.forEach(student=>{
+
+        table+=`
+        <tr>
+        <td>${student.roll}</td>
+        <td>${student.name}</td>
+        <td>${student.marks}</td>
+        <td>
+        <button onclick="deleteStudent('${student.roll}')">Delete</button>
+        </td>
+        </tr>
+        `;
+    });
+
+    document.getElementById("studentsTable").innerHTML=table;
+}
+
+
+async function addStudent(){
+
+    let student={
+        roll:document.getElementById("roll").value,
+        name:document.getElementById("name").value,
+        marks:Number(document.getElementById("marks").value)
+    };
+
+    let response=await fetch("/students",{
+        method:"POST",
+        headers:{
+            "Content-Type":"application/json"
+        },
+        body:JSON.stringify(student)
+    });
+
+    let data=await response.json();
+
+    document.getElementById("result").innerHTML=data.message;
+
+    loadStudents();
+
+    document.getElementById("roll").value="";
+    document.getElementById("name").value="";
+    document.getElementById("marks").value="";
+}
+
+
+async function deleteStudent(roll){
+
+    await fetch("/students/"+roll,{
+        method:"DELETE"
+    });
+
+    loadStudents();
+}
+
+
+async function average(){
+
+    let response=await fetch("/average");
+
+    let data=await response.json();
+
+    document.getElementById("result").innerHTML=
+    "Average Marks : "+data.average;
+}
+
+
+async function findTopper(){
+
+    let response=await fetch("/topper");
+
+    let data=await response.json();
+
+    if(data.name){
+        document.getElementById("result").innerHTML=
+        "Topper : "+data.name+" ("+data.marks+")";
+    }else{
+        document.getElementById("result").innerHTML=data.message;
+    }
+}
+
+
+async function save(){
+
+    let response=await fetch("/save",{
+        method:"POST"
+    });
+
+    let data=await response.json();
+
+    document.getElementById("result").innerHTML=data.message;
+}
+
+loadStudents();
+
+</script>
+
+</body>
+</html>
