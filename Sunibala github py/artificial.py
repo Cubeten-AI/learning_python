@@ -4,7 +4,7 @@ from fastapi import FastAPI
 
 # Gemini Client
 client = genai.Client(
-    api_key="AQ.Ab8RN6JYR7nRKgVOupzjb_jqV8AWpp_VWkNWGa1RjvcwDA1PQw"
+    api_key="AQ.Ab8RN6IK5RcRlLofq8VZetiWEgcrwXPrICF8pE5Rg7zcSz3ttA"
 )
 
 app = FastAPI()
