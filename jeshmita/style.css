@@ -1,0 +1,678 @@
+/* =========================
+   GLOBAL RESET
+========================= */
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+
+html{
+    scroll-behavior:smooth;
+}
+
+
+body{
+
+    font-family:'Poppins', 'Segoe UI', Arial, sans-serif;
+    background:#eef2ff;
+    color:#1f2937;
+    line-height:1.7;
+
+}
+
+
+
+
+/* =========================
+   HEADER
+========================= */
+
+header{
+
+    background:
+    linear-gradient(135deg,#1e40af,#7c3aed,#ec4899);
+
+    color:white;
+
+    text-align:center;
+
+    padding:70px 20px;
+
+    position:relative;
+
+    overflow:hidden;
+
+}
+
+
+
+header::after{
+
+    content:"";
+
+    position:absolute;
+
+    width:300px;
+    height:300px;
+
+    background:rgba(255,255,255,0.15);
+
+    border-radius:50%;
+
+    top:-120px;
+
+    right:-100px;
+
+}
+
+
+
+header h1{
+
+    font-size:48px;
+
+    font-weight:800;
+
+    letter-spacing:1px;
+
+    margin-bottom:10px;
+
+    animation:fadeDown 1s;
+
+}
+
+
+
+header p{
+
+    font-size:20px;
+
+    opacity:0.95;
+
+}
+
+
+
+
+
+/* =========================
+   NAVBAR
+========================= */
+
+
+nav{
+
+    margin-top:30px;
+
+}
+
+
+
+nav a{
+
+    display:inline-block;
+
+    color:white;
+
+    text-decoration:none;
+
+    margin:8px 15px;
+
+    font-size:17px;
+
+    font-weight:600;
+
+    position:relative;
+
+}
+
+
+
+nav a::after{
+
+    content:"";
+
+    width:0;
+
+    height:3px;
+
+    background:#fde047;
+
+    position:absolute;
+
+    bottom:-8px;
+
+    left:0;
+
+    transition:0.3s;
+
+}
+
+
+
+nav a:hover::after{
+
+    width:100%;
+
+}
+
+
+
+
+
+
+
+/* =========================
+   CONTAINER
+========================= */
+
+
+.container{
+
+    width:90%;
+
+    max-width:1100px;
+
+    margin:50px auto;
+
+}
+
+
+
+
+
+
+
+/* =========================
+   CARDS
+========================= */
+
+
+.card{
+
+    background:white;
+
+    padding:35px;
+
+    margin-bottom:35px;
+
+    border-radius:20px;
+
+    box-shadow:
+
+    0 10px 30px rgba(0,0,0,0.08);
+
+    transition:0.4s;
+
+}
+
+
+
+.card:hover{
+
+    transform:translateY(-5px);
+
+    box-shadow:
+
+    0 15px 35px rgba(0,0,0,0.15);
+
+}
+
+
+
+
+.card h2{
+
+    color:#2563eb;
+
+    font-size:30px;
+
+    margin-bottom:25px;
+
+    display:inline-block;
+
+}
+
+
+
+.card h2::after{
+
+    content:"";
+
+    display:block;
+
+    width:60%;
+
+    height:4px;
+
+    background:linear-gradient(
+    90deg,#2563eb,#ec4899);
+
+    margin-top:8px;
+
+}
+
+
+
+
+
+
+
+/* =========================
+   SKILLS
+========================= */
+
+
+.skills{
+
+    display:flex;
+
+    flex-wrap:wrap;
+
+    gap:15px;
+
+}
+
+
+
+.skills span{
+
+    background:
+
+    linear-gradient(
+    135deg,#2563eb,#7c3aed);
+
+    color:white;
+
+    padding:12px 22px;
+
+    border-radius:30px;
+
+    font-weight:600;
+
+    transition:0.3s;
+
+}
+
+
+
+.skills span:hover{
+
+    transform:scale(1.1);
+
+}
+
+
+
+
+
+
+
+/* =========================
+   PROJECTS
+========================= */
+
+
+.project{
+
+    background:#f8fafc;
+
+    padding:25px;
+
+    border-radius:15px;
+
+    margin:20px 0;
+
+    border-left:6px solid #7c3aed;
+
+    transition:0.3s;
+
+}
+
+
+
+.project:hover{
+
+    background:#eef2ff;
+
+    transform:translateX(10px);
+
+}
+
+
+
+.project h3{
+
+    color:#7c3aed;
+
+    font-size:22px;
+
+}
+
+
+
+
+
+
+
+
+/* =========================
+   BLOG INPUT
+========================= */
+
+
+#title,
+#content{
+
+
+    width:100%;
+
+    padding:15px;
+
+    margin:12px 0;
+
+    border:2px solid #e5e7eb;
+
+    border-radius:12px;
+
+    font-size:16px;
+
+    outline:none;
+
+    transition:0.3s;
+
+}
+
+
+
+#title:focus,
+#content:focus{
+
+    border-color:#2563eb;
+
+    box-shadow:0 0 10px rgba(37,99,235,0.2);
+
+}
+
+
+
+#content{
+
+    height:160px;
+
+    resize:none;
+
+}
+
+
+
+
+.save{
+
+    background:
+
+    linear-gradient(
+    135deg,#2563eb,#7c3aed);
+
+    color:white;
+
+    padding:14px 30px;
+
+    border:none;
+
+    border-radius:30px;
+
+    cursor:pointer;
+
+    font-size:16px;
+
+    font-weight:bold;
+
+    transition:0.3s;
+
+}
+
+
+
+.save:hover{
+
+    transform:scale(1.05);
+
+}
+
+
+
+
+
+
+
+
+/* =========================
+   BLOG CARDS
+========================= */
+
+
+.blog-post{
+
+    background:white;
+
+    padding:25px;
+
+    margin-top:20px;
+
+    border-radius:15px;
+
+    border:1px solid #e5e7eb;
+
+    animation:fadeUp 0.5s;
+
+}
+
+
+
+.blog-post h3{
+
+    color:#2563eb;
+
+    font-size:24px;
+
+}
+
+
+
+.blog-post button{
+
+    padding:10px 22px;
+
+    border:none;
+
+    border-radius:25px;
+
+    color:white;
+
+    cursor:pointer;
+
+    margin-right:10px;
+
+    font-weight:bold;
+
+}
+
+
+
+.blog-post button:first-of-type{
+
+    background:#7c3aed;
+
+}
+
+
+
+.blog-post button:last-of-type{
+
+    background:#ef4444;
+
+}
+
+
+
+.blog-post button:hover{
+
+    opacity:0.8;
+
+}
+
+
+
+
+
+
+
+/* =========================
+   CONTACT
+========================= */
+
+
+#contact p{
+
+    font-size:18px;
+
+    margin:12px 0;
+
+}
+
+
+
+
+
+
+
+
+/* =========================
+   FOOTER
+========================= */
+
+
+footer{
+
+    background:#111827;
+
+    color:white;
+
+    text-align:center;
+
+    padding:25px;
+
+    font-size:16px;
+
+}
+
+
+
+
+
+
+
+/* =========================
+   ANIMATION
+========================= */
+
+
+@keyframes fadeDown{
+
+from{
+
+opacity:0;
+
+transform:translateY(-30px);
+
+}
+
+to{
+
+opacity:1;
+
+transform:translateY(0);
+
+}
+
+}
+
+
+
+@keyframes fadeUp{
+
+from{
+
+opacity:0;
+
+transform:translateY(30px);
+
+}
+
+to{
+
+opacity:1;
+
+transform:translateY(0);
+
+}
+
+}
+
+
+
+
+
+
+
+
+/* =========================
+   MOBILE
+========================= */
+
+
+@media(max-width:700px){
+
+
+header h1{
+
+font-size:32px;
+
+}
+
+
+header p{
+
+font-size:16px;
+
+}
+
+
+.card{
+
+padding:25px;
+
+}
+
+
+nav a{
+
+margin:8px;
+
+font-size:15px;
+
+}
+
+
+.skills span{
+
+font-size:14px;
+
+}
+
+
+}
