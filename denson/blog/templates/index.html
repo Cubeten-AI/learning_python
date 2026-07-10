@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>My AI Portfolio</title>
+
+    <link rel="stylesheet" href="/static/style.css">
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <!-- Header -->
+
+    <header>
+
+        <div>
+
+            <h1>👨‍💻 {{ profile.name }}</h1>
+
+            <p>{{ profile.role }}</p>
+
+        </div>
+
+        <div>
+
+            <button onclick="window.location='/'">
+                Home
+            </button>
+
+        </div>
+
+    </header>
+
+    <!-- Profile -->
+
+    <section class="profile">
+
+        <h2>About Me</h2>
+
+        <p>
+
+            {{ profile.about }}
+
+        </p>
+
+    </section>
+
+    <!-- Dashboard -->
+
+    <div class="stats">
+
+        <div class="stat-box">
+
+            <h3>Total Blogs</h3>
+
+            <p>{{ blogs|length }}</p>
+
+        </div>
+
+        <div class="stat-box">
+
+            <h3>Projects</h3>
+
+            <p>5</p>
+
+        </div>
+
+        <div class="stat-box">
+
+            <h3>Skills</h3>
+
+            <p>6</p>
+
+        </div>
+
+    </div>
+
+    <!-- AI Assistant -->
+
+    <section class="chat">
+
+        <h2>🤖 Ask My AI</h2>
+
+        <form action="/ask" method="post">
+
+            <input
+                type="text"
+                name="question"
+                placeholder="Ask anything about me..."
+                required>
+
+            <button type="submit">
+
+                Ask AI
+
+            </button>
+
+        </form>
+
+        {% if answer %}
+
+        <div class="answer">
+
+            <h3>AI Response</h3>
+
+            <p>{{ answer }}</p>
+
+        </div>
+
+        {% endif %}
+
+    </section>
+
+    <!-- Add Blog -->
+
+    <section class="add-blog">
+
+        <h2>➕ Add Blog</h2>
+
+        <form action="/add" method="post">
+
+            <input
+                type="text"
+                name="title"
+                placeholder="Blog Title"
+                required>
+
+            <textarea
+                name="content"
+                rows="5"
+                placeholder="Write your blog..."
+                required></textarea>
+
+            <button type="submit">
+
+                Add Blog
+
+            </button>
+
+        </form>
+
+    </section>
+
+    <!-- Search -->
+
+    <section class="search">
+
+        <form action="/search">
+
+            <input
+                type="text"
+                name="q"
+                placeholder="Search Blog">
+
+            <button>
+
+                Search
+
+            </button>
+
+        </form>
+
+    </section>
+
+    <!-- Blogs -->
+
+    <section class="blogs">
+
+        {% for blog in blogs %}
+
+        <div class="card">
+
+            <h2>
+
+                {{ blog.title }}
+
+            </h2>
+
+            <p>
+
+                {{ blog.content }}
+
+            </p>
+
+            <div class="buttons">
+
+                <a href="/delete/{{ blog.id }}">
+
+                    <button class="delete">
+
+                        Delete
+
+                    </button>
+
+                </a>
+
+                <button
+                    class="edit"
+                    onclick="toggleEdit({{blog.id}})">
+
+                    Edit
+
+                </button>
+
+            </div>
+
+            <div
+                id="edit{{blog.id}}"
+                class="edit-box"
+                style="display:none;">
+
+                <form
+                    action="/edit/{{blog.id}}"
+                    method="post">
+
+                    <input
+                        type="text"
+                        name="title"
+                        value="{{blog.title}}"
+                        required>
+
+                    <textarea
+                        name="content"
+                        rows="4"
+                        required>{{blog.content}}</textarea>
+
+                    <button>
+
+                        Save Changes
+
+                    </button>
+
+                </form>
+
+            </div>
+
+        </div>
+
+        {% endfor %}
+
+    </section>
+
+    <footer>
+
+        Built with ❤️ using FastAPI & Gemini AI
+
+    </footer>
+
+</div>
+
+<script>
+
+function toggleEdit(id){
+
+    let box=document.getElementById("edit"+id);
+
+    if(box.style.display==="none"){
+
+        box.style.display="block";
+
+    }else{
+
+        box.style.display="none";
+
+    }
+
+}
+
+</script>
+
+</body>
+
+</html>
