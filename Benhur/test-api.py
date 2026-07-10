@@ -108,6 +108,12 @@ def add_student(ID: int, Name: str, Age: int, Course: str, Marks: float):
 
     student_list.append(student)
 
+    # Save to text file
+    with open("students.txt", "a") as file:
+        file.write(
+            f"ID: {ID}, Name: {Name}, Age: {Age}, Course: {Course}, Marks: {Marks}\n"
+        )
+
     return {"message": "Student added successfully", "student": student}
 
 
