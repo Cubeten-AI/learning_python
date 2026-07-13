@@ -1,0 +1,13 @@
+{
+    "name": "Vivek",
+    "about": "My name is Vivek. I am the creator of My AI. I am a software developer and engineering student passionate about Artificial Intelligence, Python, FastAPI, JavaScript, HTML, CSS, and web development. I enjoy building AI assistants, websites, and learning new technologies.",
+    "skills": [
+        "Python",
+        "FastAPI",
+        "JavaScript",
+        "HTML",
+        "CSS",
+        "Artificial Intelligence"
+    ],
+    "creator": true
+}
