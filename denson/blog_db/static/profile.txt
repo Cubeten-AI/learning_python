@@ -1,0 +1,36 @@
+Name: Denson
+
+Role:
+Python Developer
+FastAPI Developer
+
+Skills:
+Python
+FastAPI
+HTML
+CSS
+JavaScript
+Bootstrap
+Git
+GitHub
+PostgreSQL
+Supabase
+
+Education:
+Bachelor of Technology
+
+About:
+I enjoy building web applications with Python and FastAPI.
+I am interested in backend development, APIs, databases, and AI.
+
+Projects:
+Portfolio Website
+Todo App
+Student Management System
+Blog Website
+AI Portfolio
+FastAPI CRUD Applications
+
+Goals:
+Become a Full Stack Python Developer.
+Learn Machine Learning and Artificial Intelligence.

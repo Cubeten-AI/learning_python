@@ -1,0 +1,270 @@
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial, Helvetica, sans-serif;
+}
+
+body{
+
+    background:linear-gradient(135deg,#667eea,#764ba2);
+
+    min-height:100vh;
+
+}
+
+.container{
+
+    padding-top:30px;
+    padding-bottom:30px;
+
+}
+
+.card{
+
+    border:none;
+
+    border-radius:18px;
+
+    overflow:hidden;
+
+    transition:.3s;
+
+    box-shadow:0 10px 25px rgba(0,0,0,.15);
+
+}
+
+.card:hover{
+
+    transform:translateY(-5px);
+
+    box-shadow:0 15px 35px rgba(0,0,0,.25);
+
+}
+
+.card-header{
+
+    font-weight:bold;
+
+    font-size:20px;
+
+}
+
+.profile-image{
+
+    width:180px;
+
+    height:180px;
+
+    border-radius:50%;
+
+    object-fit:cover;
+
+    border:6px solid #0d6efd;
+
+    box-shadow:0 5px 20px rgba(0,0,0,.25);
+
+}
+
+h2{
+
+    font-weight:bold;
+
+}
+
+.form-control{
+
+    border-radius:12px;
+
+    padding:12px;
+
+}
+
+textarea{
+
+    resize:none;
+
+}
+
+.btn{
+
+    border-radius:12px;
+
+    font-weight:bold;
+
+    transition:.3s;
+
+}
+
+.btn:hover{
+
+    transform:scale(1.05);
+
+}
+
+.btn-success{
+
+    background:#28a745;
+
+}
+
+.btn-warning{
+
+    color:white;
+
+}
+
+.btn-danger{
+
+    background:#dc3545;
+
+}
+
+.btn-primary{
+
+    background:#0d6efd;
+
+}
+
+.card-body p{
+
+    text-align:justify;
+
+}
+
+.alert{
+
+    border-radius:12px;
+
+}
+
+footer{
+
+    color:white;
+
+    font-size:15px;
+
+}
+
+footer hr{
+
+    border:1px solid rgba(255,255,255,.4);
+
+}
+
+.text-muted{
+
+    color:white !important;
+
+}
+
+.shadow{
+
+    box-shadow:0 10px 30px rgba(0,0,0,.2)!important;
+
+}
+
+.fa-trash{
+
+    margin-right:5px;
+
+}
+
+.fa-pen{
+
+    margin-right:5px;
+
+}
+
+input:focus,
+textarea:focus{
+
+    box-shadow:0 0 12px rgba(13,110,253,.4)!important;
+
+    border-color:#0d6efd!important;
+
+}
+
+::-webkit-scrollbar{
+
+    width:10px;
+
+}
+
+::-webkit-scrollbar-thumb{
+
+    background:#0d6efd;
+
+    border-radius:20px;
+
+}
+
+::-webkit-scrollbar-track{
+
+    background:#ddd;
+
+}
+
+@media(max-width:992px){
+
+    .profile-image{
+
+        width:150px;
+
+        height:150px;
+
+    }
+
+}
+
+@media(max-width:768px){
+
+    .container{
+
+        padding:15px;
+
+    }
+
+    h2{
+
+        font-size:24px;
+
+    }
+
+    .btn{
+
+        width:100%;
+
+        margin-top:10px;
+
+    }
+
+}
+
+.blog-card{
+
+    min-height:260px;
+
+}
+
+.blog-title{
+
+    color:#0d6efd;
+
+    font-weight:bold;
+
+}
+
+.blog-content{
+
+    color:#444;
+
+    line-height:1.7;
+
+}
+
+.ai-answer{
+
+    white-space:pre-wrap;
+
+}
