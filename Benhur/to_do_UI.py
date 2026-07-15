@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 from fastapi.responses import HTMLResponse
+<<<<<<< HEAD
 from dotenv import load_dotenv
 import os
 
@@ -7,6 +8,8 @@ load_dotenv()
 database_url = os.getenv("databaseURL")
 print("Database URL:", database_url)
 
+=======
+>>>>>>> 203ae62df791fdfca68066d16d569bee47e3d964
 
 app = FastAPI()
 
@@ -176,11 +179,18 @@ load();
 """
 
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 203ae62df791fdfca68066d16d569bee47e3d964
 @app.get("/", response_class=HTMLResponse)
 def home():
     return html
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 203ae62df791fdfca68066d16d569bee47e3d964
 @app.get("/todo")
 def get_todo():
     return todo
