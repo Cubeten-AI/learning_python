@@ -1,19 +1,27 @@
 from fastapi import FastAPI
 from fastapi.responses import HTMLResponse
 from dotenv import load_dotenv
-import os
+import psycopg2,os
 
 load_dotenv()
-database_url = os.getenv("databaseURL")
-print("Database URL:", database_url)
+DATABASE_URL=os.getenv("databaseURL")
 
+connection=psycopg2.connect(DATABASE_URL)
+cursor=connection.cursor()
 
-app = FastAPI()
+cursor.execute("""
+CREATE TABLE IF NOT EXISTS todo(
+id SERIAL PRIMARY KEY,
+task TEXT NOT NULL,
+type TEXT NOT NULL
+)
+""")
+connection.commit()
 
-todo = ["🍎 Eat food", "👕 Wash clothes"]
-not_todo = ["❌ Waste time"]
+app=FastAPI()
 
-html = """
+html="""
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -173,48 +181,43 @@ load();
 
 </body>
 </html>
+
 """
 
-
-
-@app.get("/", response_class=HTMLResponse)
+@app.get("/",response_class=HTMLResponse)
 def home():
     return html
 
 @app.get("/todo")
 def get_todo():
-    return todo
-
+    cursor.execute("SELECT task FROM todo WHERE type='todo'")
+    return[x[0]for x in cursor.fetchall()]
 
 @app.get("/not_todo")
 def get_not_todo():
-    return not_todo
-
+    cursor.execute("SELECT task FROM todo WHERE type='not'")
+    return[x[0]for x in cursor.fetchall()]
 
 @app.post("/todo")
 def add_todo(task:str):
-    todo.append("📌 " + task)
-    return {"message":"added"}
-
+    cursor.execute("INSERT INTO todo(task,type)VALUES(%s,%s)",("📌 "+task,"todo"))
+    connection.commit()
+    return{"message":"added"}
 
 @app.post("/not_todo")
 def add_not_todo(task:str):
-    not_todo.append("🚫 " + task)
-    return {"message":"added"}
-
+    cursor.execute("INSERT INTO todo(task,type)VALUES(%s,%s)",("🚫 "+task,"not"))
+    connection.commit()
+    return{"message":"added"}
 
 @app.delete("/todo/{task}")
 def delete_todo(task:str):
-    if task in todo:
-        todo.remove(task)
-    return {"message":"deleted"}
-
+    cursor.execute("DELETE FROM todo WHERE task=%s",(task,))
+    connection.commit()
+    return{"message":"deleted"}
 
 @app.put("/edit")
 def edit_todo(old:str,new:str):
-
-    for i,x in enumerate(todo):
-        if x == old:
-            todo[i] = new
-
-    return {"message":"updated"}
+    cursor.execute("UPDATE todo SET task=%s WHERE task=%s",(new,old))
+    connection.commit()
+    return{"message":"updated"}
