@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Weather App</title>
+    <style>
+        body {
+            font-family: Arial;
+            background: #87CEEB;
+            text-align: center;
+            padding: 50px;
+        }
+
+        .container {
+            background: white;
+            width: 300px;
+            margin: auto;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px grey;
+        }
+
+        input {
+            width: 80%;
+            padding: 10px;
+            margin: 10px;
+        }
+
+        button {
+            padding: 10px 20px;
+            cursor: pointer;
+        }
+
+        #result {
+            margin-top: 20px;
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>Jeshmita Weather App</h2>
+
+        <input type="text" id="city" placeholder="Enter city name">
+        <br>
+        <button onclick="getWeather()">Get Weather</button>
+
+        <div id="result"></div>
+    </div>
+
+    <script>
+        async function getWeather() {
+            const city = document.getElementById("city").value;
+
+            // Replace with your OpenWeatherMap API key
+            const apiKey = "38c7813b2a12c02f7e38a7fe11a912e6";
+
+            const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`;
+
+            try {
+                const response = await fetch(url);
+                const data = await response.json();
+
+                if (data.cod === 200) {
+                    document.getElementById("result").innerHTML =
+                        `<h3>${data.name}</h3>
+                        <p>Temperature: ${data.main.temp} °C</p>
+                        <p>Weather: ${data.weather[0].description}</p>
+                        <p>Humidity: ${data.main.humidity}%</p>`;
+                } else {
+                    document.getElementById("result").innerHTML =
+                        "City not found!";
+                }
+            } catch (error) {
+                document.getElementById("result").innerHTML =
+                    "Error fetching weather data.";
+            }
+        }
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Moirangthem Deepa Devi | Portfolio</title>
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Poppins',sans-serif;
+}
+
+body{
+    background:linear-gradient(135deg,#667eea,#764ba2);
+    color:#333;
+}
+
+
+/* Header */
+
+header{
+    text-align:center;
+    padding:50px 20px;
+    color:white;
+}
+
+header h1{
+    font-size:45px;
+    margin-bottom:10px;
+}
+
+header p{
+    font-size:20px;
+}
+
+
+nav{
+    margin-top:25px;
+}
+
+nav a{
+    color:white;
+    text-decoration:none;
+    margin:15px;
+    font-weight:bold;
+}
+
+nav a:hover{
+    color:#ffd700;
+}
+
+
+/* Main container */
+
+.container{
+    width:90%;
+    max-width:1000px;
+    margin:auto;
+}
+
+
+/* Cards */
+
+.card{
+
+    background:white;
+    padding:30px;
+    margin:25px 0;
+    border-radius:20px;
+    box-shadow:0 10px 25px rgba(0,0,0,0.2);
+
+}
+
+
+.card h2{
+
+    color:#764ba2;
+    margin-bottom:15px;
+
+}
+
+
+/* Skills */
+
+.skills span{
+
+    display:inline-block;
+    background:#667eea;
+    color:white;
+    padding:10px 20px;
+    border-radius:20px;
+    margin:8px;
+
+}
+
+
+/* Blog */
+
+input,textarea{
+
+    width:100%;
+    padding:15px;
+    margin:10px 0;
+    border:1px solid #ccc;
+    border-radius:10px;
+
+}
+
+
+button{
+
+    padding:12px 20px;
+    border:none;
+    border-radius:25px;
+    cursor:pointer;
+    color:white;
+    font-weight:bold;
+    margin:5px;
+
+}
+
+
+.save{
+
+    background:#28a745;
+
+}
+
+
+.edit{
+
+    background:#ff9800;
+
+}
+
+
+.remove{
+
+    background:#e63946;
+
+}
+
+
+.blog-post{
+
+    background:#f8f9fa;
+    padding:20px;
+    margin-top:20px;
+    border-radius:15px;
+    border-left:6px solid #764ba2;
+
+}
+
+
+.blog-post h3{
+
+    color:#764ba2;
+
+}
+
+
+/* Footer */
+
+footer{
+
+    text-align:center;
+    color:white;
+    padding:20px;
+    margin-top:30px;
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<header>
+
+<h1>Moirangthem Deepa Devi</h1>
+
+<p>B.Tech Computer Science Engineering</p>
+
+<p>6th Semester | Manipur Technical University</p>
+
+
+<nav>
+
+<a href="#about">About</a>
+
+<a href="#skills">Skills</a>
+
+<a href="#blog">Blog</a>
+
+</nav>
+
+
+</header>
+
+
+
+<div class="container">
+
+
+<section class="card" id="about">
+
+<h2>About Me</h2>
+
+<p>
+Hello! I am <b>Moirangthem Deepa Devi</b>, a 6th semester 
+B.Tech Computer Science Engineering student at 
+<b>Manipur Technical University</b>.
+</p>
+
+<br>
+
+<p>
+I am passionate about web development, programming and learning
+new technologies. I love creating creative and user-friendly
+web applications using modern tools.
+</p>
+
+
+</section>
+
+
+
+
+<section class="card" id="skills">
+
+<h2>My Skills</h2>
+
+<div class="skills">
+
+<span>HTML</span>
+
+<span>CSS</span>
+
+<span>JavaScript</span>
+
+<span>C++</span>
+
+<span>Python</span>
+
+<span>Web Development</span>
+
+</div>
+
+</section>
+
+
+
+
+
+<section class="card" id="blog">
+
+<h2>My Blog</h2>
+
+
+<input id="title" placeholder="Enter Blog Title">
+
+
+<textarea id="content" rows="5" placeholder="Write your blog..."></textarea>
+
+
+<button class="save" onclick="saveBlog()">
+Add Blog
+</button>
+
+
+<div id="blogs"></div>
+
+
+</section>
+
+
+</div>
+
+
+
+
+<footer>
+
+<p>
+© 2026 Moirangthem Deepa Devi | Portfolio Website
+</p>
+
+</footer>
+
+
+
+
+
+<script>
+
+
+let blogs=[];
+
+let editIndex=-1;
+
+
+
+function saveBlog(){
+
+
+let title=document.getElementById("title").value;
+
+let content=document.getElementById("content").value;
+
+
+
+if(title=="" || content==""){
+
+alert("Please enter blog details");
+
+return;
+
+}
+
+
+
+if(editIndex==-1){
+
+
+blogs.push({
+
+title:title,
+
+content:content
+
+});
+
+
+}
+
+else{
+
+
+blogs[editIndex]={
+
+title:title,
+
+content:content
+
+};
+
+
+editIndex=-1;
+
+
+}
+
+
+
+document.getElementById("title").value="";
+
+document.getElementById("content").value="";
+
+
+displayBlogs();
+
+
+}
+
+
+
+
+
+function displayBlogs(){
+
+
+let result="";
+
+
+blogs.forEach((blog,index)=>{
+
+
+result+=`
+
+
+<div class="blog-post">
+
+
+<h3>${blog.title}</h3>
+
+<p>${blog.content}</p>
+
+
+<button class="edit" onclick="editBlog(${index})">
+Edit
+</button>
+
+
+<button class="remove" onclick="deleteBlog(${index})">
+Delete
+</button>
+
+
+</div>
+
+
+`;
+
+
+});
+
+
+document.getElementById("blogs").innerHTML=result;
+
+
+}
+
+
+
+
+
+function editBlog(index){
+
+
+document.getElementById("title").value=blogs[index].title;
+
+document.getElementById("content").value=blogs[index].content;
+
+
+editIndex=index;
+
+
+}
+
+
+
+
+function deleteBlog(index){
+
+
+blogs.splice(index,1);
+
+displayBlogs();
+
+
+}
+
+
+</script>
+
+
+
+</body>
+
+</html>

@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Student Management System</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial,sans-serif;
+}
+
+body{
+    background:#eef2f7;
+}
+
+.container{
+    width:95%;
+    max-width:1100px;
+    margin:30px auto;
+    background:#fff;
+    padding:25px;
+    border-radius:10px;
+    box-shadow:0 0 15px rgba(0,0,0,.2);
+}
+
+h1{
+    text-align:center;
+    color:#1565c0;
+    margin-bottom:20px;
+}
+
+.form{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:10px;
+}
+
+input{
+    padding:10px;
+    border:1px solid #ccc;
+    border-radius:5px;
+}
+
+button{
+    padding:10px;
+    border:none;
+    border-radius:5px;
+    color:white;
+    cursor:pointer;
+    font-size:15px;
+}
+
+.add{background:#2e7d32;}
+.update{background:#f9a825;}
+.delete{background:#d32f2f;}
+.show{background:#1565c0;}
+.average{background:#6a1b9a;}
+.topper{background:#00897b;}
+
+button:hover{
+    opacity:.9;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+    margin-top:20px;
+}
+
+th{
+    background:#1565c0;
+    color:white;
+}
+
+th,td{
+    border:1px solid #ddd;
+    padding:10px;
+    text-align:center;
+}
+
+tr:nth-child(even){
+    background:#f5f5f5;
+}
+
+#result{
+    margin-top:20px;
+    font-size:18px;
+    text-align:center;
+    font-weight:bold;
+}
+</style>
+
+</head>
+<body>
+
+<div class="container">
+
+<h1>Student Management System</h1>
+
+<div class="form">
+
+<input type="number" id="id" placeholder="Student ID">
+<input type="text" id="name" placeholder="Student Name">
+<input type="text" id="age" placeholder="Age">
+<input type="text" id="course" placeholder="Course">
+<input type="number" id="marks" placeholder="Marks">
+
+</div>
+
+<br>
+
+<button class="add" onclick="addStudent()">Add</button>
+<button class="update" onclick="updateStudent()">Update</button>
+<button class="delete" onclick="deleteStudent()">Delete</button>
+<button class="show" onclick="loadStudents()">Show All</button>
+<button class="average" onclick="average()">Average</button>
+<button class="topper" onclick="topper()">Topper</button>
+
+<div id="result"></div>
+
+<table>
+
+<thead>
+
+<tr>
+<th>ID</th>
+<th>Name</th>
+<th>Age</th>
+<th>Course</th>
+<th>Marks</th>
+<th>Grade</th>
+</tr>
+
+</thead>
+
+<tbody id="table">
+
+</tbody>
+
+</table>
+
+</div>
+
+<script>
+
+const API="http://127.0.0.1:8000";
+
+function studentObject(){
+return{
+id:Number(document.getElementById("id").value),
+name:document.getElementById("name").value,
+age:document.getElementById("age").value,
+course:document.getElementById("course").value,
+marks:Number(document.getElementById("marks").value)
+}
+}
+async function loadStudents() {
+    try {
+        const res = await fetch(API + "/students");
+
+        if (!res.ok) {
+            throw new Error(`HTTP Error: ${res.status}`);
+        }
+
+        const data = await res.json();
+
+        let rows = "";
+
+        data.forEach(s => {
+            rows += `
+                <tr>
+                    <td>${s.id}</td>
+                    <td>${s.name}</td>
+                    <td>${s.age}</td>
+                    <td>${s.course}</td>
+                    <td>${s.marks}</td>
+                    <td>${s.grade}</td>
+                </tr>
+            `;
+        });
+
+        document.getElementById("table").innerHTML = rows;
+
+    } catch (error) {
+        console.error("Error loading students:", error);
+
+        document.getElementById("table").innerHTML = `
+            <tr>
+                <td colspan="6" style="color:red; text-align:center;">
+                    Failed to load student data.
+                </td>
+            </tr>
+        `;
+
+        alert("Unable to load students. Please check if the FastAPI server is running.");
+    }
+}
+
+async function addStudent(){
+
+await fetch(API+"/students",{
+method:"POST",
+headers:{
+"Content-Type":"application/json"
+},
+body:JSON.stringify(studentObject())
+});
+
+loadStudents();
+
+}
+
+async function updateStudent(){
+
+const id=document.getElementById("id").value;
+
+await fetch(API+"/students/"+id,{
+method:"PUT",
+headers:{
+"Content-Type":"application/json"
+},
+body:JSON.stringify(studentObject())
+});
+
+loadStudents();
+
+}
+
+async function deleteStudent(){
+
+const id=document.getElementById("id").value;
+
+await fetch(API+"/students/"+id,{
+method:"DELETE"
+});
+
+loadStudents();
+
+}
+
+async function average(){
+
+const res=await fetch(API+"/average");
+
+const data=await res.json();
+
+document.getElementById("result").innerHTML="Average Marks : "+data.Average;
+
+}
+
+async function topper(){
+
+const res=await fetch(API+"/topper");
+
+const data=await res.json();
+
+document.getElementById("result").innerHTML=
+"Topper : "+data.name+
+" | Marks : "+data.marks+
+" | Grade : "+data.grade;
+
+}
+
+loadStudents();
+
+</script>
+
+</body>
+</html>

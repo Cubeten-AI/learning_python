@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WordVault Dictionary</title>
+    <style>
+        :root {
+            --bg-gradient: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+            --card-bg: rgba(255, 255, 255, 0.15);
+            --text-color: #ffffff;
+            --accent-color: #fdcb6e;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: var(--bg-gradient);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: var(--text-color);
+            padding: 20px;
+        }
+
+        .dict-container {
+            background: var(--card-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 35px 30px;
+            border-radius: 20px;
+            width: 100%;
+            max-width: 450px;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.25);
+        }
+
+        .app-title {
+            font-size: 24px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            margin-bottom: 25px;
+            text-align: center;
+            opacity: 0.95;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .search-box {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 25px;
+        }
+
+        .search-box input {
+            flex: 1;
+            padding: 14px 20px;
+            border: none;
+            border-radius: 25px;
+            outline: none;
+            font-size: 16px;
+            background: rgba(255, 255, 255, 0.95);
+            color: #333;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .search-box button {
+            background: #00cec9;
+            border: none;
+            padding: 14px 24px;
+            border-radius: 25px;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+        }
+
+        .search-box button:hover {
+            background: #00b894;
+            transform: translateY(-1px);
+        }
+
+        .result-box {
+            display: none;
+            max-height: 400px;
+            overflow-y: auto;
+            padding-right: 5px;
+            animation: fadeIn 0.4s ease-in-out forwards;
+        }
+
+        .result-box::-webkit-scrollbar {
+            width: 6px;
+        }
+        .result-box::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 10px;
+        }
+
+        .word-header {
+            margin-bottom: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            padding-bottom: 15px;
+        }
+
+        .word-output {
+            font-size: 28px;
+            font-weight: 700;
+            text-transform: capitalize;
+        }
+
+        .meaning-section {
+            margin-bottom: 20px;
+        }
+
+        .definition-item {
+            font-size: 16px;
+            line-height: 1.6;
+            margin-bottom: 14px;
+            opacity: 0.95;
+            background: rgba(0, 0, 0, 0.1);
+            padding: 12px 15px;
+            border-radius: 10px;
+            border-left: 4px solid var(--accent-color);
+        }
+
+        .error-message {
+            color: #ff8787;
+            text-align: center;
+            margin-top: 15px;
+            display: none;
+            font-weight: 500;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="dict-container">
+        <h1 class="app-title">WordVault</h1>
+
+        <div class="search-box">
+            <input type="text" id="word-input" placeholder="Type a word here..." autocomplete="off">
+            <button id="search-btn">Find</button>
+        </div>
+
+        <div class="error-message" id="error-txt">Word not found. Try another.</div>
+
+        <div class="result-box" id="result-display">
+            <div class="word-header">
+                <div class="word-output" id="word-name">Word</div>
+            </div>
+
+            <div id="meanings-wrapper">
+                <!-- Definitions will be injected here dynamically -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Place your API Ninjas Key here inside the single quotes
+        const API_KEY = 'dUejMFwgLTAvs8R5QIcfIiUsRMBogAsX91mUSV8T'; 
+        
+        const searchBtn = document.getElementById('search-btn');
+        const wordInput = document.getElementById('word-input');
+        const resultDisplay = document.getElementById('result-display');
+        const errorTxt = document.getElementById('error-txt');
+        
+        const wordName = document.getElementById('word-name');
+        const meaningsWrapper = document.getElementById('meanings-wrapper');
+
+        async function searchWord(word) {
+            // Trigger Demo Mode if the API Key isn't provided yet
+            if (API_KEY === 'YOUR_API_KEY') {
+                showDemoData(word);
+                return;
+            }
+
+            const apiUrl = `https://api.api-ninjas.com/v1/dictionary?word=${word}`;
+            
+            try {
+                const response = await fetch(apiUrl, {
+                    method: 'GET',
+                    headers: {
+                        'X-Api-Key': API_KEY
+                    }
+                });
+
+                if (!response.ok) {
+                    showError("Failed to fetch data from server.");
+                    return;
+                }
+                
+                const data = await response.json();
+                
+                // API Ninjas returns valid: false if the word doesn't exist
+                if (!data.valid || !data.definition) {
+                    showError("Word not found. Please check spelling.");
+                    return;
+                }
+
+                displayData(data);
+                
+            } catch (error) {
+                showError("Something went wrong. Try again later.");
+            }
+        }
+
+        function displayData(data) {
+            errorTxt.style.display = "none";
+            resultDisplay.style.display = "block";
+
+            wordName.innerText = data.word;
+            meaningsWrapper.innerHTML = "";
+
+            /* 
+              API Ninjas sends all definitions bundled into a single raw text block 
+              prefixed by numbers (e.g., "1. Definition one. 2. Definition two.").
+              This regex parses and splits them nicely so they look great on screen.
+            */
+            const rawDefinitions = data.definition.split(/(?=\d+\.\s)/);
+
+            rawDefinitions.forEach(def => {
+                if (def.trim() !== "") {
+                    const defBlock = document.createElement('div');
+                    defBlock.classList.add('definition-item');
+                    defBlock.innerText = def.trim();
+                    meaningsWrapper.appendChild(defBlock);
+                }
+            });
+        }
+
+        // Simulates realistic word configurations if testing locally without an API Key
+        function showDemoData(word) {
+            errorTxt.style.display = "none";
+            resultDisplay.style.display = "block";
+            wordName.innerText = word + " (Demo)";
+            
+            meaningsWrapper.innerHTML = `
+                <div class="definition-item">1. This is a mockup definition for the word "${word}" because the app is running in Demo Mode.</div>
+                <div class="definition-item">2. To load authentic real-time data, please update the API_KEY variable inside the script tags at the bottom of the source file.</div>
+            `;
+        }
+
+        function showError(message) {
+            resultDisplay.style.display = "none";
+            errorTxt.style.display = "block";
+            if (message) errorTxt.innerText = message;
+        }
+
+        // Interactive Handlers
+        searchBtn.addEventListener('click', () => {
+            if (wordInput.value.trim() !== "") {
+                searchWord(wordInput.value.trim());
+            }
+        });
+
+        wordInput.addEventListener('keydown', (event) => {
+            if (event.key === 'Enter' && wordInput.value.trim() !== "") {
+                searchWord(wordInput.value.trim());
+            }
+        });
+    </script>
+</body>
+</html>

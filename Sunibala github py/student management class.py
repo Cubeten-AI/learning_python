@@ -26,3 +26,7 @@ s2 = Student(2, "Bob", 22, "Science", 88)
 s2.add_student()
 
 print(Student.student_list)
+
+
+
+    print(f.read())

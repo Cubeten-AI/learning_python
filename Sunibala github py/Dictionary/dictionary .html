@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dictionary App</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Dictionary App</h1>
+        <div class="search-box">
+            <input type="text" id="wordInput" placeholder="Enter a word..." />
+            <button id="searchBtn">Search</button>
+        </div>
+
+        <div id="result" class="result hidden">
+            <div class="word-section">
+                <h2 id="word"></h2>
+                <button id="audioBtn" class="hidden">🔊</button>
+            </div>
+            <p id="phonetic"></p>
+            
+            <div class="meaning">
+                <h3>Definition:</h3>
+                <p id="definition"></p>
+            </div>
+
+            <div class="extra">
+                <p><strong>Example:</strong> <span id="example">N/A</span></p>
+            </div>
+        </div>
+
+        <p id="error" class="error hidden"></p>
+        <div id="loader" class="loader hidden"></div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

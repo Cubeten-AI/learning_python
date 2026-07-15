@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dictionary App</title>
+    <style>
+        body{
+            font-family: Arial;
+            text-align: center;
+            background: #2c738d;
+            padding: 50px;
+        }
+
+        .container{
+            background: white;
+            width: 400px;
+            margin: auto;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: yellow 0px 0px 10px;   
+        }
+
+        input{
+            width: 70%;
+            padding: 10px;
+        }
+
+        button{
+            padding: 10px 20px;
+            margin-top: 10px;
+        }
+
+        #result{
+            margin-top: 20px;
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Jeshmita Dictionary App</h2>
+
+    <input type="text" id="word" placeholder="Enter a word">
+    <br><br>
+
+    <button onclick="searchWord()">Search</button>
+
+    <div id="result"></div>
+</div>
+
+<script>
+async function searchWord() {
+
+    const word = document.getElementById("word").value;
+    const apiKey = "6UfJPPUUX1XbYIC17oNQPD45Gse2mF9LNOX9luV5"; // Replac6UfJPPUUX1XbYIC17oNQPD45Gse2mF9LNOX9luV5e with your API key
+
+    try {
+        const response = await fetch(
+            `https://api.api-ninjas.com/v1/dictionary?word=${word}`,
+            {
+                headers: {
+                    "X-Api-Key": apiKey
+                }
+            }
+        );
+
+        const data = await response.json();
+
+        if (data.valid) {
+            document.getElementById("result").innerHTML = `
+                <h3>${data.word}</h3>
+                <p><b>Definition:</b></p>
+                <p>${data.definition}</p>
+            `;
+        } else {
+            document.getElementById("result").innerHTML =
+                "<p>Word not found.</p>";
+        }
+
+    } catch(error) {
+        document.getElementById("result").innerHTML =
+            "<p>Error loading data.</p>";
+    }
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dictionary App</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: 'Segoe UI', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            background: #fff;
+            width: 100%;
+            max-width: 550px;
+            padding: 2.5rem;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+
+        h1 {
+            text-align: center;
+            color: #764ba2;
+            margin-bottom: 1.5rem;
+            font-size: 2rem;
+        }
+
+        .search-box {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 2rem;
+        }
+
+        #wordInput {
+            flex: 1;
+            padding: 14px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+            outline: none;
+        }
+
+        #wordInput:focus {
+            border-color: #764ba2;
+        }
+
+        #searchBtn {
+            padding: 14px 28px;
+            background: #764ba2;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        #searchBtn:hover {
+            background: #5e3a8a;
+        }
+
+        .result {
+            animation: fadeIn 0.5s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        #word {
+            font-size: 2.2rem;
+            color: #333;
+            text-transform: capitalize;
+            margin-bottom: 1rem;
+        }
+
+        .meaning h3 {
+            color: #764ba2;
+            margin-bottom: 0.5rem;
+            font-size: 1.1rem;
+        }
+
+        #definition {
+            line-height: 1.8;
+            color: #555;
+            background: #f5f3ff;
+            padding: 1rem;
+            border-radius: 8px;
+            border-left: 4px solid #764ba2;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .error {
+            color: #e74c3c;
+            text-align: center;
+            margin-top: 1rem;
+            font-weight: 500;
+        }
+
+        .loader {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #764ba2;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 2rem auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Dictionary App</h1>
+        <div class="search-box">
+            <input type="text" id="wordInput" placeholder="Enter a word...">
+            <button id="searchBtn">Search</button>
+        </div>
+
+        <div id="loader" class="loader hidden"></div>
+        <p id="error" class="error hidden"></p>
+
+        <div id="result" class="result hidden">
+            <h2 id="word"></h2>
+            <div class="meaning">
+                <h3>Definition:</h3>
+                <p id="definition"></p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_KEY = "1PHT6gpUiEo5zRRjDRkrsINsR20HXoN38AvVoHvA"; // Replace with your API Ninjas key
+
+        const wordInput = document.getElementById("wordInput");
+        const searchBtn = document.getElementById("searchBtn");
+        const resultDiv = document.getElementById("result");
+        const errorMsg = document.getElementById("error");
+        const loader = document.getElementById("loader");
+
+        async function searchWord() {
+            const word = wordInput.value.trim();
+            
+            if (!word) {
+                showError("Please enter a word");
+                return;
+            }
+
+            // Reset UI
+            errorMsg.classList.add("hidden");
+            resultDiv.classList.add("hidden");
+            loader.classList.remove("hidden");
+
+            try {
+                const res = await fetch(`https://api.api-ninjas.com/v1/dictionary?word=${word}`, {
+                    headers: { 'X-Api-Key': API_KEY }
+                });
+
+                if (!res.ok) throw new Error("API request failed");
+                
+                const data = await res.json();
+
+                if (!data.definition) {
+                    throw new Error("Word not found");
+                }
+
+                displayResult(word, data.definition);
+                
+            } catch (err) {
+                showError(err.message);
+            } finally {
+                loader.classList.add("hidden");
+            }
+        }
+
+        function displayResult(word, definition) {
+            document.getElementById("word").innerText = word;
+            document.getElementById("definition").innerText = definition;
+            resultDiv.classList.remove("hidden");
+        }
+
+        function showError(message) {
+            errorMsg.innerText = message;
+            errorMsg.classList.remove("hidden");
+        }
+
+        searchBtn.addEventListener("click", searchWord);
+        wordInput.addEventListener("keypress", (e) => {
+            if (e.key === "Enter") searchWord();
+        });
+    </script>
+</body>
+</html>
