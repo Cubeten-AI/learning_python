@@ -1,7 +1,12 @@
+from dotenv import load_dotenv
+import os
 from fastapi import FastAPI
 from fastapi.responses import HTMLResponse
 
 app = FastAPI()
+load_dotenv()
+
+DB=os.getenv("DB_URL")
 
 
 
