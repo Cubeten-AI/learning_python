@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Vivek Portfolio</title>
+
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial, Helvetica, sans-serif;
+}
+
+
+body{
+
+    background:#f4f4f4;
+    color:#333;
+
+}
+
+
+
+header{
+
+    background:#0077b6;
+    color:white;
+    text-align:center;
+    padding:50px 20px;
+
+}
+
+
+header h1{
+
+    font-size:40px;
+
+}
+
+
+header p{
+
+    margin-top:10px;
+    font-size:18px;
+
+}
+
+
+
+nav{
+
+    background:#023e8a;
+    padding:15px;
+    text-align:center;
+
+}
+
+
+nav a{
+
+    color:white;
+    text-decoration:none;
+    margin:0 20px;
+    font-size:18px;
+
+}
+
+
+nav a:hover{
+
+    color:#ffd60a;
+
+}
+
+
+
+section{
+
+    width:80%;
+    margin:40px auto;
+
+}
+
+
+
+h2{
+
+    color:#0077b6;
+    margin-bottom:15px;
+
+}
+
+
+
+.about,
+.project,
+.contact,
+.blog,
+.form-box{
+
+    background:white;
+    padding:20px;
+    border-radius:10px;
+    box-shadow:0 0 10px rgba(0,0,0,0.1);
+    margin-bottom:20px;
+
+}
+
+
+
+.projects,
+.blogs{
+
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+    gap:20px;
+
+}
+
+
+
+.project:hover,
+.blog:hover{
+
+    transform:translateY(-5px);
+    transition:0.3s;
+
+}
+
+
+
+button{
+
+    background:#0077b6;
+    color:white;
+    border:none;
+    padding:8px 15px;
+    margin:5px;
+    border-radius:5px;
+    cursor:pointer;
+
+}
+
+
+button:hover{
+
+    background:#023e8a;
+
+}
+
+
+
+input,
+textarea{
+
+    width:100%;
+    padding:10px;
+    border:1px solid #ccc;
+    border-radius:5px;
+
+}
+
+
+textarea{
+
+    height:100px;
+
+}
+
+
+
+footer{
+
+    background:#023e8a;
+    color:white;
+    text-align:center;
+    padding:15px;
+    margin-top:30px;
+
+}
+
+
+</style>
+
+
+</head>
+
+
+<body>
+
+
+
+<header>
+
+<h1>Vivek</h1>
+
+<p>Student | Web Developer</p>
+
+</header>
+
+
+
+
+<nav>
+
+<a href="#about">About</a>
+
+<a href="#projects">Projects</a>
+
+<a href="#blogs">Blogs</a>
+
+<a href="#contact">Contact</a>
+
+</nav>
+
+
+
+
+
+<section id="about">
+
+
+<div class="about">
+
+
+<h2>About Me</h2>
+
+
+<p>
+
+Hello! I am Vivek, a passionate web developer and student.
+I build responsive websites using HTML, CSS, JavaScript and FastAPI.
+
+</p>
+
+
+</div>
+
+
+</section>
+
+
+
+
+
+
+<section id="projects">
+
+
+<h2>My Projects</h2>
+
+
+<div class="projects">
+
+
+
+<div class="project">
+
+<h3>Portfolio Website</h3>
+
+<p>
+Personal portfolio website showcasing my skills and projects.
+</p>
+
+</div>
+
+
+
+
+
+<div class="project">
+
+<h3>Calculator</h3>
+
+<p>
+A calculator application built using HTML, CSS and JavaScript.
+</p>
+
+</div>
+
+
+
+
+
+<div class="project">
+
+<h3>Weather App</h3>
+
+<p>
+Weather application displaying live weather information.
+</p>
+
+</div>
+
+
+
+</div>
+
+
+</section>
+
+
+
+
+
+
+
+
+<section id="blogs">
+
+
+<h2>My Blogs</h2>
+
+
+
+<button onclick="openForm()">
+
+Add New Blog
+
+</button>
+
+
+
+
+<div id="blogForm" class="form-box" style="display:none;">
+
+
+<h3 id="formHeading">
+
+Add Blog
+
+</h3>
+
+
+<input type="hidden" id="blogId">
+
+
+
+<input 
+type="text"
+id="title"
+placeholder="Blog Title">
+
+
+<br><br>
+
+
+
+<textarea 
+id="description"
+placeholder="Blog Description">
+</textarea>
+
+
+<br>
+
+
+<button onclick="addBlog()">
+
+Save
+
+</button>
+
+
+<button onclick="closeForm()">
+
+Cancel
+
+</button>
+
+
+</div>
+
+
+
+
+<br>
+
+
+<div class="blogs" id="blogContainer">
+
+Loading Blogs...
+
+</div>
+
+
+
+
+</section>
+
+
+
+
+
+
+
+
+<section id="contact">
+
+
+<div class="contact">
+
+
+<h2>Contact Me</h2>
+
+
+<p>
+<strong>Email:</strong>
+avivekluwang@email.com
+</p>
+
+
+<p>
+<strong>Phone:</strong>
++91 8794392451
+</p>
+
+
+<p>
+<strong>GitHub:</strong>
+github.com/avivekluwang-wq
+</p>
+
+
+
+</div>
+
+
+</section>
+
+
+
+
+<script>
+
+const API_URL = "http://127.0.0.1:8000";
+
+// Load all blogs
+function loadBlogs() {
+
+    const container = document.getElementById("blogContainer");
+
+    fetch(`${API_URL}/blogs`)
+        .then(response => response.json())
+        .then(data => {
+
+            container.innerHTML = "";
+
+            data.forEach(blog => {
+
+                container.innerHTML += `
+                    <div class="blog">
+                        <h3>${blog.title}</h3>
+                        <p>${blog.content}</p>
+                        <small>Author: ${blog.author}</small>
+                        <br><br>
+
+                        <button onclick="viewBlog(${blog.id})">
+                            View
+                        </button>
+
+                        <button onclick='editBlog(
+                            ${blog.id},
+                            ${JSON.stringify(blog.title)},
+                            ${JSON.stringify(blog.content)},
+                            ${JSON.stringify(blog.author)}
+                        )'>
+                            Edit
+                        </button>
+
+                        <button onclick="deleteBlog(${blog.id})">
+                            Delete
+                        </button>
+
+                        <hr>
+                    </div>
+                `;
+            });
+
+        })
+        .catch(error => {
+            container.innerHTML = "Unable to load blogs";
+            console.log(error);
+        });
+
+}
+
+// View one blog
+function viewBlog(id) {
+
+    fetch(`${API_URL}/blogs/${id}`)
+        .then(response => response.json())
+        .then(blog => {
+
+            alert(
+                "Title: " + blog.title +
+                "\n\nContent: " + blog.content +
+                "\n\nAuthor: " + blog.author
+            );
+
+        });
+
+}
+
+// Open Add Form
+function openForm() {
+
+    document.getElementById("blogForm").style.display = "block";
+    document.getElementById("formHeading").innerHTML = "Add Blog";
+
+    document.getElementById("blogId").value = "";
+    document.getElementById("title").value = "";
+    document.getElementById("content").value = "";
+
+    document.getElementById("saveBtn").innerHTML = "Add";
+    document.getElementById("saveBtn").onclick = addBlog;
+
+}
+
+// Close Form
+function closeForm() {
+    document.getElementById("blogForm").style.display = "none";
+}
+
+// Add Blog
+function addBlog() {
+
+    let title = document.getElementById("title").value;
+    let content = document.getElementById("content").value;
+    let author = "Vivek";
+
+    fetch(
+        `${API_URL}/add_blog?title=${encodeURIComponent(title)}&content=${encodeURIComponent(content)}&author=${encodeURIComponent(author)}`,
+        {
+            method: "POST"
+        }
+    )
+        .then(response => response.json())
+        .then(() => {
+
+            alert("Blog added successfully");
+            closeForm();
+            loadBlogs();
+
+        })
+        .catch(error => {
+
+            console.log(error);
+            alert("Failed to add blog");
+
+        });
+
+}
+
+// Edit Blog
+function editBlog(id, title, content, author) {
+
+    document.getElementById("blogForm").style.display = "block";
+
+    document.getElementById("formHeading").innerHTML = "Edit Blog";
+
+    document.getElementById("blogId").value = id;
+    document.getElementById("title").value = title;
+    document.getElementById("content").value = content;
+
+    document.getElementById("saveBtn").innerHTML = "Update";
+    document.getElementById("saveBtn").onclick = updateBlog;
+
+}
+
+// Update Blog
+function updateBlog() {
+
+    let id = document.getElementById("blogId").value;
+    let title = document.getElementById("title").value;
+    let content = document.getElementById("content").value;
+
+    fetch(`${API_URL}/edit_blog/?id=${id}&new_title=${encodeURIComponent(title)}&new_content=${encodeURIComponent(content)}`, {
+
+        method: "PUT",
+
+        headers: {
+            "Content-Type": "application/json"
+        },
+
+        body: JSON.stringify({
+            title: title,
+            content: content
+        })
+
+    })
+        .then(response => response.json())
+        .then(() => {
+
+            alert("Blog updated successfully");
+
+            closeForm();
+            loadBlogs();
+
+        })
+        .catch(error => console.log(error));
+
+}
+
+// Delete Blog
+function deleteBlog(id) {
+
+    if (!confirm("Delete this blog?"))
+        return;
+
+    fetch(`${API_URL}/delete_blog/${id}`, {
+
+        method: "DELETE"
+
+    })
+        .then(response => response.json())
+        .then(() => {
+
+            alert("Blog deleted");
+            loadBlogs();
+
+        });
+
+}
+
+// Initial Load
+loadBlogs();
+
+</script>
+
+
+
+
+
+<footer>
+
+<p>
+&copy; 2026 Vivek | All Rights Reserved
+</p>
+
+</footer>
+
+
+
+
+</body>
+
+</html>
