@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Todo App</title>
+
+    <link rel="stylesheet" href="/static/style.css">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body>
+
+<div class="container mt-5">
+
+    <h1 class="text-center mb-4">
+        Todo Management System
+    </h1>
+
+    <!-- Search -->
+
+    <form action="/search" method="get" class="row g-2 mb-4">
+
+        <div class="col-md-10">
+            <input
+                type="number"
+                class="form-control"
+                name="id"
+                placeholder="Search by ID"
+                required
+            >
+        </div>
+
+        <div class="col-md-2">
+            <button class="btn btn-primary w-100">
+                Search
+            </button>
+        </div>
+
+    </form>
+
+
+    {% if edit %}
+
+    <!-- Edit Form -->
+
+    <div class="card mb-4">
+
+        <div class="card-header bg-warning">
+            <h4>Edit Todo</h4>
+        </div>
+
+        <div class="card-body">
+
+            <form action="/update/{{ edit[0] }}" method="post">
+
+                <input
+                    class="form-control mb-3"
+                    type="text"
+                    name="name"
+                    value="{{ edit[1] }}"
+                    required
+                >
+
+                <input
+                    class="form-control mb-3"
+                    type="text"
+                    name="work"
+                    value="{{ edit[2] }}"
+                    required
+                >
+
+                <button class="btn btn-success">
+                    Update
+                </button>
+
+                <a href="/" class="btn btn-secondary">
+                    Cancel
+                </a>
+
+            </form>
+
+        </div>
+
+    </div>
+
+    {% else %}
+
+    <!-- Add Form -->
+
+    <div class="card mb-4">
+
+        <div class="card-header bg-success text-white">
+            <h4>Add Todo</h4>
+        </div>
+
+        <div class="card-body">
+
+            <form action="/add" method="post">
+
+                <input
+                    class="form-control mb-3"
+                    type="text"
+                    name="name"
+                    placeholder="Enter Name"
+                    required
+                >
+
+                <input
+                    class="form-control mb-3"
+                    type="text"
+                    name="work"
+                    placeholder="Enter Work"
+                    required
+                >
+
+                <button class="btn btn-success">
+                    Add Todo
+                </button>
+
+            </form>
+
+        </div>
+
+    </div>
+
+    {% endif %}
+
+
+    <!-- Table -->
+
+    <table class="table table-bordered table-hover text-center">
+
+        <thead class="table-dark">
+
+        <tr>
+
+            <th>ID</th>
+
+            <th>Name</th>
+
+            <th>Work</th>
+
+            <th>Edit</th>
+
+            <th>Delete</th>
+
+        </tr>
+
+        </thead>
+
+        <tbody>
+
+        {% for todo in todos %}
+
+        <tr>
+
+            <td>{{ todo[0] }}</td>
+
+            <td>{{ todo[1] }}</td>
+
+            <td>{{ todo[2] }}</td>
+
+            <td>
+
+                <a
+                    href="/edit/{{ todo[0] }}"
+                    class="btn btn-warning btn-sm"
+                >
+                    Edit
+                </a>
+
+            </td>
+
+            <td>
+
+                <a
+                    href="/delete/{{ todo[0] }}"
+                    class="btn btn-danger btn-sm"
+                    onclick="return confirm('Delete this todo?')"
+                >
+                    Delete
+                </a>
+
+            </td>
+
+        </tr>
+
+        {% endfor %}
+
+        </tbody>
+
+    </table>
+
+</div>
+
+</body>
+</html>
