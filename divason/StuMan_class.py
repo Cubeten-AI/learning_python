@@ -6,7 +6,7 @@ class Student:
         self.marks = marks
 
     def calculate_grade(self):
-        self.marks = float(self.marks)  # Ensure marks is a float for comparison
+        #self.marks = float(self.marks)  # Ensure marks is a float for comparison
         if self.marks >= 90:
             return "A+"
         elif self.marks >= 80:
@@ -47,7 +47,7 @@ class StudentManagement:
         course = str( input("Enter Course: "))
         marks = float(input("Enter Marks: "))
 
-        student = Student(student_id, name, marks, course)
+        student = Student(student_id, name, course, marks)
         self.students.append(student)
 
         print("Student Added Successfully!")

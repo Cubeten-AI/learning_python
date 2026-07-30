@@ -136,9 +136,8 @@ while True:
     print("3. Search Student")
     print("4. Update Student")
     print("5. Delete Student")
-    print("6. Calculate Grade")
-    print("7. Find Topper")
-    print("8. Exit")
+    print("6. Find Topper")
+    print("7. Exit")
 
     try:
         choice = int(input("Enter your choice (1-8): "))
