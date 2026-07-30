@@ -1,0 +1,14 @@
+ID: 1
+Name: malem
+Age: 20
+Course: bsc
+Marks: 70.0
+Grade: B
+------------------------------
+ID: 3
+Name: malem
+Age: 21
+Course: bba
+Marks: 98.0
+Grade: A+
+------------------------------

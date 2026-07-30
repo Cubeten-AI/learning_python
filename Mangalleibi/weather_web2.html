@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Weather Dashboard</title>
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Segoe UI,sans-serif;
+}
+
+body{
+    background:linear-gradient(120deg,#141E30,#243B55);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    min-height:100vh;
+}
+
+.container{
+    width:420px;
+    background:#ffffff;
+    border-radius:20px;
+    padding:25px;
+    box-shadow:0 15px 35px rgba(0,0,0,.4);
+}
+
+h1{
+    text-align:center;
+    margin-bottom:20px;
+    color:#243B55;
+}
+
+.search{
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+}
+
+.search input{
+    padding:12px;
+    border-radius:10px;
+    border:2px solid #243B55;
+    font-size:16px;
+}
+
+.search button{
+    padding:12px;
+    border:none;
+    background:#243B55;
+    color:white;
+    border-radius:10px;
+    cursor:pointer;
+    font-size:16px;
+}
+
+.search button:hover{
+    background:#162538;
+}
+
+.weather{
+    display:none;
+    margin-top:25px;
+}
+
+.header{
+    text-align:center;
+}
+
+.header h2{
+    color:#243B55;
+}
+
+.top{
+    display:flex;
+    justify-content:space-around;
+    align-items:center;
+    margin:20px 0;
+}
+
+.top img{
+    width:90px;
+}
+
+.temp{
+    font-size:40px;
+    font-weight:bold;
+    color:#243B55;
+}
+
+.condition{
+    text-align:center;
+    font-size:20px;
+    margin-bottom:15px;
+}
+
+.grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:12px;
+}
+
+.card{
+    background:#f1f5ff;
+    padding:12px;
+    border-radius:10px;
+    text-align:center;
+    transition:.3s;
+}
+
+.card:hover{
+    transform:scale(1.05);
+}
+
+.label{
+    font-size:14px;
+    color:#555;
+}
+
+.value{
+    font-size:20px;
+    font-weight:bold;
+    color:#243B55;
+}
+
+</style>
+
+</head>
+<body>
+
+<div class="container">
+
+<h1>🌍 Weather Dashboard</h1>
+
+<div class="search">
+<input type="text" id="city" placeholder="Enter city">
+<button onclick="getWeather()">Check Weather</button>
+</div>
+
+<div class="weather" id="weather">
+
+<div class="header">
+<h2 id="location"></h2>
+</div>
+
+<div class="top">
+
+<img id="icon">
+
+<div>
+<div class="temp"><span id="temp"></span>°C</div>
+</div>
+
+</div>
+
+<div class="condition" id="condition"></div>
+
+<div class="grid">
+
+<div class="card">
+<div class="label">Humidity</div>
+<div class="value" id="humidity"></div>
+</div>
+
+<div class="card">
+<div class="label">Wind</div>
+<div class="value" id="wind"></div>
+</div>
+
+<div class="card">
+<div class="label">Feels Like</div>
+<div class="value" id="feels"></div>
+</div>
+
+<div class="card">
+<div class="label">Pressure</div>
+<div class="value" id="pressure"></div>
+</div>
+
+<div class="card">
+<div class="label">UV Index</div>
+<div class="value" id="uv"></div>
+</div>
+
+<div class="card">
+<div class="label">Country</div>
+<div class="value" id="country"></div>
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<script>
+
+const apiKey="69b28e9ac1534b9681f70927262907";
+
+async function getWeather(){
+
+const city=document.getElementById("city").value;
+
+if(city==""){
+alert("Enter city name");
+return;
+}
+
+const url=`https://api.weatherapi.com/v1/current.json?key=${apiKey}&q=${city}&aqi=yes`;
+
+try{
+
+const response=await fetch(url);
+const data=await response.json();
+
+if(data.error){
+alert(data.error.message);
+return;
+}
+
+document.getElementById("weather").style.display="block";
+
+document.getElementById("location").innerHTML=
+data.location.name+", "+data.location.region;
+
+document.getElementById("country").innerHTML=
+data.location.country;
+
+document.getElementById("temp").innerHTML=
+data.current.temp_c;
+
+document.getElementById("condition").innerHTML=
+data.current.condition.text;
+
+document.getElementById("humidity").innerHTML=
+data.current.humidity+"%";
+
+document.getElementById("wind").innerHTML=
+data.current.wind_kph+" km/h";
+
+document.getElementById("feels").innerHTML=
+data.current.feelslike_c+"°C";
+
+document.getElementById("pressure").innerHTML=
+data.current.pressure_mb+" mb";
+
+document.getElementById("uv").innerHTML=
+data.current.uv;
+
+document.getElementById("icon").src=
+"https:"+data.current.condition.icon;
+
+}
+
+catch(error){
+alert("Something went wrong");
+}
+
+}
+
+document.getElementById("city").addEventListener("keypress",function(e){
+
+if(e.key==="Enter"){
+getWeather();
+}
+
+});
+
+</script>
+
+</body>
+</html>

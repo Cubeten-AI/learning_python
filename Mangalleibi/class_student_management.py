@@ -76,9 +76,12 @@ class Student:
 
     def topper(self):
         if self.students:
-            t = max(self.students, key=lambda x: self.students[x]["Marks"])
+            t = max(self.students[x]["Marks"] for x in self.students)
             print("\nTopper:")
-            self.show(t)
+            for i in self.students:
+             if self.students[i]["Marks"] == t:
+                              
+              self.show(t)
         else:
             print("No Records!")
 
