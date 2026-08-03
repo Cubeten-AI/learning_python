@@ -1,7 +1,7 @@
-Name: LILY
-Roll No: 22
-Course: BCOM
+Name: alex
+Roll No: 25
+Course: bsc
 
-Name: LILY
-Roll No: 21
-Course: BSC
+Name: Diva
+Roll No: 27
+Course: bsc
