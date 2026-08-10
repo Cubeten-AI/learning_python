@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <title>Gift of the Magi AI</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+
+
+<body>
+
+    <div class="chat-container">
+
+        <!-- Header -->
+
+        <div class="chat-header">
+
+    <div>
+        <h1>📖 Gift of the Magi</h1>
+        <p>AI Storyteller</p>
+    </div>
+
+    <button onclick="clearChat()" class="clear-button">
+        Clear Chat
+    </button>
+
+</div>
+
+
+        <!-- Chat area -->
+
+        <div id="chat-box" class="chat-box">
+
+            <div class="message assistant">
+
+                <div class="avatar">🤖</div>
+
+                <div class="bubble">
+
+                    Hello! 👋 I'm your Gift of the Magi
+                    AI storyteller.
+
+                    <br><br>
+
+                    Ask me anything about the story!
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- Input area -->
+
+        <div class="input-area">
+
+            <input
+                type="text"
+                id="question"
+                placeholder="Ask something about the story..."
+                autocomplete="off"
+            >
+
+            <button onclick="askQuestion()">
+                Send ➤
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+
+</body>
+
+</html>
